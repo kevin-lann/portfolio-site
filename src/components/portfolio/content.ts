@@ -13,14 +13,18 @@ export const entries: PortfolioEntry[] = [
     id: "exp-studio-systems",
     section: "experience",
     title: "Software Engineer, Borderpass",
-    overview:
-      "Built Ai & automation tools for legaltech workflows.",
+    overview: "Built AI & automation tools for legaltech workflows.",
     metadata: [
-      { label: "Location", value: "Toronto" },
-      { label: "Timeline", value: "May 2025 - Aug 2026 (12 months intern, 4 months part-time)" },
+      { label: "Location", value: "Toronto", icon: "MapPin" },
+      {
+        label: "Timeline",
+        value: "May 2025 - Aug 2026 (12 months intern, 4 months part-time)",
+        icon: "CalendarRange",
+      },
       {
         label: "Tools",
-        value: ["TypeScript", "Next.js", "PostgreSQL", "AWS"],
+        value: ["TypeScript", "Python:", "Next.js", "PostgreSQL", "AWS", "GraphQL"],
+        icon: "Shapes",
       },
     ],
     markdown: `## Overview\n
@@ -44,21 +48,18 @@ Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia
     overview:
       "An experimental, terminal-inspired portfolio with markdown-authored stories.",
     metadata: [
-      { label: "Name", value: "Portfolio Console" },
-      {
-        label: "Brief",
-        value: "Editorial-style portfolio system with custom split-pane UI.",
-      },
       {
         label: "Stack",
         value: ["Astro", "React", "Tailwind CSS", "TypeScript"],
+        icon: "Shapes",
       },
-      { label: "Date", value: "Mar 2026" },
-      { label: "Duration", value: "2 weeks" },
-      { label: "Team", value: "Solo project" },
+      { label: "Date", value: "Mar 2026", icon: "CalendarRange" },
+      { label: "Duration", value: "2 weeks", icon: "CalendarRange" },
+      { label: "Team", value: "Solo project", icon: "User" },
       {
         label: "Links",
         value: ["demo.example.com", "github.com/example/portfolio-console"],
+        icon: "Link2",
       },
     ],
     markdown: `## Project Story\n
@@ -80,9 +81,13 @@ Aenean condimentum varius velit, id finibus est tempus sit amet. Pellentesque te
     overview:
       "A running archive of notes, process writeups, and visual references.",
     metadata: [
-      { label: "Type", value: "Archive" },
-      { label: "Format", value: "Markdown notes + image boards" },
-      { label: "Status", value: "Ongoing" },
+      { label: "Type", value: "Archive", icon: "BookOpen" },
+      {
+        label: "Format",
+        value: "Markdown notes + image boards",
+        icon: "FileText",
+      },
+      { label: "Status", value: "Ongoing", icon: "CalendarRange" },
     ],
     markdown: `## Why this exists\n
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac nibh et mauris gravida interdum.

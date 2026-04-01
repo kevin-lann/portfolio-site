@@ -53,7 +53,7 @@ export function LeftSidebar({
                     className={`subnav-link ${activeEntryId === entry.id ? 'active' : ''}`}
                     onClick={() => onEntrySelect(section, entry.id)}
                   >
-                    {entry.title}
+                    <div className="flex gap-2 text-left"><span className="text-xs">∟</span> {entry.title}</div>
                   </button>
                 ))}
               </div>
