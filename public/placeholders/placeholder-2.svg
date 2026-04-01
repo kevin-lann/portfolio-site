@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" fill="none">
+  <rect width="1200" height="700" fill="#101010" />
+  <circle cx="320" cy="350" r="190" stroke="#2A2A2A" stroke-width="2" />
+  <rect x="560" y="180" width="500" height="340" stroke="#2A2A2A" stroke-width="2" />
+  <text x="80" y="120" fill="#EDEDED" font-size="42" font-family="monospace">Placeholder Image 02</text>
+</svg>

@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" fill="none">
+  <rect width="1200" height="700" fill="#0F0F0F" />
+  <path d="M120 580L350 250L520 430L710 160L960 580" stroke="#2A2A2A" stroke-width="2" fill="none" />
+  <text x="80" y="120" fill="#EDEDED" font-size="42" font-family="monospace">Placeholder Image 03</text>
+  <text x="80" y="180" fill="#8E8E8E" font-size="28" font-family="monospace">Markdown-driven content area</text>
+</svg>

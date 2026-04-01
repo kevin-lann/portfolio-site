@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700" fill="none">
+  <rect width="1200" height="700" fill="#111111" />
+  <rect x="40" y="40" width="1120" height="620" stroke="#2A2A2A" stroke-width="2" />
+  <text x="80" y="120" fill="#EDEDED" font-size="42" font-family="monospace">Placeholder Image 01</text>
+  <text x="80" y="180" fill="#8E8E8E" font-size="28" font-family="monospace">Replace with screenshot / gif</text>
+</svg>
