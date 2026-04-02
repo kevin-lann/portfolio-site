@@ -9,6 +9,7 @@ import { SplitHandle } from './SplitHandle';
 import type { PortfolioEntry, SectionKey } from './types';
 
 type HandleKey = 'left' | 'middle';
+type ColorMode = 'dark' | 'light';
 
 interface DragState {
   handle: HandleKey;
@@ -20,6 +21,9 @@ interface DragState {
 const LEFT_MIN = 0;
 const MIDDLE_MIN = 0;
 const RIGHT_MIN = 0;
+const COLOR_MODE_STORAGE_KEY = 'portfolio-color-mode';
+
+const isColorMode = (value: string): value is ColorMode => value === 'dark' || value === 'light';
 
 /**
  * Clamps a value between a minimum and maximum value.
@@ -35,6 +39,11 @@ export function PortfolioApp() {
   const [activeEntryId, setActiveEntryId] = useState<string>('');
   const [leftWidth, setLeftWidth] = useState(40);
   const [middleWidth, setMiddleWidth] = useState(40);
+  const [colorMode, setColorMode] = useState<ColorMode>(() => {
+    if (typeof window === 'undefined') return 'dark';
+    const stored = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY);
+    return stored && isColorMode(stored) ? stored : 'dark';
+  });
 
   const dragState = useRef<DragState | null>(null);
 
@@ -62,6 +71,35 @@ export function PortfolioApp() {
       setActiveEntryId(entries[0].id);
     }
   }, [activeEntryId, entries]);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-color-mode', colorMode);
+    window.localStorage.setItem(COLOR_MODE_STORAGE_KEY, colorMode);
+  }, [colorMode]);
+
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      const target = event.target as HTMLElement | null;
+      const isTyping =
+        target &&
+        (target.tagName === 'INPUT' ||
+          target.tagName === 'TEXTAREA' ||
+          target.isContentEditable);
+
+      if (isTyping) return;
+
+      const key = event.key.toLowerCase();
+
+      if (key === 'l') {
+        setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+      } else if (key === 'd') {
+        setColorMode('dark');
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
 
   const onSectionChange = (section: SectionKey) => {
     setActiveSection(section);
@@ -148,7 +186,7 @@ export function PortfolioApp() {
   }
 
   return (
-    <main className="portfolio-root">
+    <main className="portfolio-root" data-color-mode={colorMode}>
       <div className="portfolio-shell">
         <div className="portfolio-column" style={{ width: `${leftWidth}%` }}>
           <LeftSidebar

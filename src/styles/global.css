@@ -11,6 +11,19 @@
   --muted: #9a9a9a;
   --line: #1a1a1a;
   --lime: #b8ff5c;
+  color-scheme: dark;
+}
+
+:root[data-color-mode="light"] {
+  --bg: #f2efe9;
+  --panel: #f8f6f0;
+  --panel-2: #efebe3;
+  --light: #181818;
+  --text: #404040;
+  --muted: #6f6a62;
+  --line: #d9d2c7;
+  --lime: #72da3a;
+  color-scheme: light;
 }
 
 * {
@@ -28,6 +41,16 @@ body {
   color: var(--text);
   font-family: "Fragment Mono", monospace;
   line-height: 1.55;
+}
+
+::selection {
+  background: var(--lime);
+  color: var(--bg);
+}
+
+::-moz-selection {
+  background: var(--lime);
+  color: var(--bg);
 }
 
 .portfolio-root {
@@ -90,6 +113,24 @@ body {
   color: var(--muted);
   max-width: none;
   line-height: 1.5;
+}
+
+.shortcut-hints {
+  margin: 0.8rem 0 0;
+  color: var(--muted);
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+
+.shortcut-hints kbd {
+  border: 1px solid var(--line);
+  border-radius: 0.25rem;
+  padding: 0.08rem 0.35rem;
+  margin-right: 0.4rem;
+  color: var(--light);
+  background: color-mix(in oklab, var(--panel-2) 80%, var(--bg));
+  font: inherit;
 }
 
 .group-label {

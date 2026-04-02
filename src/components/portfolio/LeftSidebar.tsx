@@ -30,6 +30,10 @@ export function LeftSidebar({
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et dui id lacus
           efficitur eleifend non ac erat.
         </p>
+        <p className="shortcut-hints text-xs" aria-label="Keyboard shortcuts">
+          <span><kbd>L</kbd> light mode</span>
+          <span><kbd>D</kbd> dark mode</span>
+        </p>
       </div>
 
       <nav className="nav-group" aria-label="Main sections">
