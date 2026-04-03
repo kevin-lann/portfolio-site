@@ -22,7 +22,7 @@
   --text: #404040;
   --muted: #6f6a62;
   --line: #d9d2c7;
-  --lime: #72da3a;
+  --lime: #36af4e;
   color-scheme: light;
 }
 
@@ -41,6 +41,32 @@ body {
   color: var(--text);
   font-family: "Fragment Mono", monospace;
   line-height: 1.55;
+}
+
+.circle {
+  --circle-size: 48px;
+  position: fixed;
+  height: var(--circle-size);
+  width: var(--circle-size);
+  border: 0.5px solid var(--light);
+  border-radius: 100%;
+  top: calc(var(--circle-size) / 2 * -1);
+  left: calc(var(--circle-size) / 2 * -1);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 100ms ease;
+  z-index: 9999;
+  transform: translate(-9999px, -9999px);
+}
+
+.circle.is-visible {
+  opacity: 0.85;
+}
+
+@media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
+  .circle {
+    display: none;
+  }
 }
 
 ::selection {
@@ -304,7 +330,10 @@ body {
 .content-markdown {
   padding-top: 0;
   line-height: 1.5;
-  padding: 0rem 8rem;
+  width: min(80%, 80ch);
+  margin-left: auto;
+  margin-right: auto;
+  color: var(--light);
 }
 
 .content-markdown h2,
@@ -330,16 +359,24 @@ body {
   color: var(--text);
 }
 
+.content-markdown p {
+  white-space: pre-line;
+}
+
 .content-markdown ul {
   list-style: disc;
   padding-left: 1.2rem;
-  margin: 0.7rem 0;
+  margin: 01rem 0;
 }
 
 .content-markdown ol {
   list-style: decimal;
   padding-left: 1.2rem;
   margin: 0.7rem 0;
+}
+
+.content-markdown li + li {
+  margin-top: 0.4rem;
 }
 
 .content-markdown li::marker {

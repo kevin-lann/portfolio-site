@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown';
+import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 
 import type { PortfolioEntry } from './types';
@@ -35,7 +36,7 @@ export function ContentPanel({
         </div>
       </div>
       <div className="content-markdown mb-[20vh]">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>{entry.markdown}</ReactMarkdown>
+        <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{entry.markdown}</ReactMarkdown>
       </div>
     </section>
   );

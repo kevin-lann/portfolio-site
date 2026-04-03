@@ -47,6 +47,7 @@ export function PortfolioApp() {
   });
 
   const dragState = useRef<DragState | null>(null);
+  const cursorCircleRef = useRef<HTMLDivElement | null>(null);
 
   const entriesBySection = useMemo(
     () =>
@@ -91,6 +92,15 @@ export function PortfolioApp() {
 
       const key = event.key.toLowerCase();
 
+      if (key === 'f') {
+        if (document.fullscreenElement) {
+          void document.exitFullscreen().catch(() => undefined);
+        } else {
+          void document.documentElement.requestFullscreen().catch(() => undefined);
+        }
+        return;
+      }
+
       if (key === 'l') {
         setColorMode('light');
       } else if (key === 'd') {
@@ -102,6 +112,65 @@ export function PortfolioApp() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
+  useEffect(() => {
+    const circleElement = cursorCircleRef.current;
+    if (!circleElement) return;
+
+    const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const previousMouse = { x: mouse.x, y: mouse.y };
+    const circle = { x: mouse.x, y: mouse.y };
+
+    let currentScale = 0;
+    let currentAngle = 0;
+    let frameId = 0;
+    let hasMoved = false;
+    const speed = 0.17;
+
+    const handleMouseMove = (event: MouseEvent) => {
+      mouse.x = event.clientX;
+      mouse.y = event.clientY;
+      if (!hasMoved) {
+        hasMoved = true;
+        circleElement.classList.add('is-visible');
+      }
+    };
+
+    const tick = () => {
+      circle.x += (mouse.x - circle.x) * speed;
+      circle.y += (mouse.y - circle.y) * speed;
+      const translateTransform = `translate(${circle.x}px, ${circle.y}px)`;
+
+      const deltaMouseX = mouse.x - previousMouse.x;
+      const deltaMouseY = mouse.y - previousMouse.y;
+      previousMouse.x = mouse.x;
+      previousMouse.y = mouse.y;
+
+      const mouseVelocity = Math.min(Math.sqrt(deltaMouseX ** 2 + deltaMouseY ** 2) * 4, 150);
+      const scaleValue = (mouseVelocity / 150) * 0.5;
+      currentScale += (scaleValue - currentScale) * speed;
+      const scaleTransform = `scale(${1 + currentScale}, ${1 - currentScale})`;
+
+      const angle = (Math.atan2(deltaMouseY, deltaMouseX) * 180) / Math.PI;
+      if (mouseVelocity > 20) {
+        currentAngle = angle;
+      }
+      const rotateTransform = `rotate(${currentAngle}deg)`;
+
+      circleElement.style.transform =
+        `${translateTransform} ${rotateTransform} ${scaleTransform}`;
+
+      frameId = window.requestAnimationFrame(tick);
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    frameId = window.requestAnimationFrame(tick);
+
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.cancelAnimationFrame(frameId);
+    };
   }, []);
 
   const onSectionChange = (section: SectionKey) => {
@@ -225,6 +294,7 @@ export function PortfolioApp() {
           />
         </div>
       </div>
+      <div ref={cursorCircleRef} className="circle" aria-hidden="true" />
     </main>
   );
 }

@@ -37,8 +37,7 @@ export const entries: PortfolioEntry[] = [
     links: [{ label: "Site", href: "https://www.borderpass.ai/" }],
     markdown: `
 # Overview\n
-Borderpass is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed over several core features + products
-since joining the team in May 2025. 
+Borderpass is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed over several core features and products since joining the team in May 2025. 
 
 # My key contributions \n
 - Leveraged **AI vision models** such as **Google Gemini** to read & extract information from user documents, constructing a comprehesive overview of applicant information
@@ -46,6 +45,15 @@ since joining the team in May 2025.
 - Delivered an end-to-end **AI Job Search Tool** which produces LLM synthesized filters based off of user resumes to perform a web crawl of popular job sites, returning a personalized list of job postings in seconds
 - Designed, built, and maintained several core **AWS lambda functions** for document processing and integration
 
+# Workflow Automation
+An ongoing project I contributed to was a headless browser automation tool built with Python, Puppeteer, and Google Gemini. It mixes tranditional browser based automation with improvisational capabilities of LLM's to perform repetitive online form submissions in order to save manual labor.
+The main challenge of working on this automation was balancing several moving pieces. The automation is must follow a strict series of steps that are logged and reported by the server and integrations such as Slack. It has the capability to read/parse emails, upload and download files, and perform complex form submissions in a headless browser.
+The automation is deployed on an EC2 instance with a configurable cron scedule to perform runs daily.
+I helped bridge a lot of these gaps and helped bring up the overall reliability of the bot through resolving bot detection issues, improving memory usage, and managing async workflows to ensure tasks like email verification codes are read before proceeding with the next step in the workflow.
+
+## Integration with Internal Systems
+A core architectural problem with the automation was that it was split from the main application codebase. This meant that complex business logic needed to be translated over from Typescript to Python when adding new decision flows each time. 
+I abstracted this away by introducing a REST API interface allowing the automation to communicate with the main API server essentially offshoring the business logic decisions to be made from there. This signifigantly improved the maintainability of the automation and reduced the chances of incorrect business logic being copied over.
 
 ![System planning placeholder](/placeholders/placeholder-1.svg)
 

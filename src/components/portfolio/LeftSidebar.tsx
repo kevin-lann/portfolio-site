@@ -27,12 +27,13 @@ export function LeftSidebar({
       <div>
         <h1 className="logo fancy-font">Kevin Lan</h1>
         <p className="intro-copy text-sm">
-          Software engineer based in Toronto building scalable digital solutions.
+          Software engineer based in Toronto building scalable digital solutions. University of Toronto Scarborugh 4th year CS student (Entrepreneurship Stream)
         </p>
         <p className="shortcut-hints text-xs" aria-label="Keyboard shortcuts">
           <span><kbd>L</kbd> light mode</span>
           <span><kbd>D</kbd> dark mode</span>
           <span><kbd>H</kbd> hide/show sidebars</span>
+          <span><kbd>F</kbd> fullscreen</span>
         </p>
       </div>
 
