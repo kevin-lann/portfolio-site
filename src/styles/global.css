@@ -302,8 +302,9 @@ body {
 }
 
 .content-markdown {
-  border-top: 1px solid var(--line);
-  padding-top: 1rem;
+  padding-top: 0;
+  line-height: 1.5;
+  padding: 0rem 8rem;
 }
 
 .content-markdown h2,
@@ -318,7 +319,7 @@ body {
   margin-bottom: 0.6rem;
   font-family: "Newsreader", serif;
   font-style: italic;
-  font-size: clamp(1.5rem, 3vw, 2.4rem);
+  font-size: 1.5rem;
   letter-spacing: 0.01em;
   transform: scaleX(0.7);
   transform-origin: left center;
@@ -330,7 +331,19 @@ body {
 }
 
 .content-markdown ul {
+  list-style: disc;
   padding-left: 1.2rem;
+  margin: 0.7rem 0;
+}
+
+.content-markdown ol {
+  list-style: decimal;
+  padding-left: 1.2rem;
+  margin: 0.7rem 0;
+}
+
+.content-markdown li::marker {
+  color: var(--light);
 }
 
 .content-markdown img {
@@ -339,6 +352,40 @@ body {
   margin: 1rem 0;
   border: 1px solid var(--line);
   background: #111;
+}
+
+.content-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.content-links {
+  display: flex;
+  gap: 0.75rem;
+  margin-left: auto;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.collapse-toggle {
+  border: 1px solid var(--line);
+  border-radius: 1rem;
+  background: color-mix(in oklab, var(--panel-2) 94%, var(--light));
+  color: var(--light);
+  font: inherit;
+  line-height: 1;
+  padding: 0.38rem 0.72rem;
+  cursor: pointer;
+}
+
+.collapse-toggle:hover,
+.collapse-toggle:focus-visible {
+  color: var(--lime);
+  border-color: var(--line);
+  outline: 0;
 }
 
 .split-handle {

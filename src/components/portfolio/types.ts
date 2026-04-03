@@ -15,4 +15,5 @@ export interface PortfolioEntry {
   overview: string;
   metadata: MetadataField[];
   markdown: string;
+  links: { label: string; href: string }[];
 }

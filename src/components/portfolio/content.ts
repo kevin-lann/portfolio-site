@@ -12,7 +12,7 @@ export const entries: PortfolioEntry[] = [
   {
     id: "exp-studio-systems",
     section: "experience",
-    title: "Software Engineer, Borderpass",
+    title: "Software Engineer, Borderpass (2025-26)",
     overview: "Built AI & automation tools for legaltech workflows.",
     metadata: [
       { label: "Location", value: "Toronto", icon: "MapPin" },
@@ -23,22 +23,33 @@ export const entries: PortfolioEntry[] = [
       },
       {
         label: "Tools",
-        value: ["TypeScript", "Python:", "Next.js", "PostgreSQL", "AWS", "GraphQL"],
+        value: [
+          "TypeScript",
+          "Python",
+          "Next.js",
+          "PostgreSQL",
+          "AWS",
+          "GraphQL",
+        ],
         icon: "Shapes",
       },
     ],
-    markdown: `## Overview\n
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nulla tincidunt dictum metus, vitae laoreet massa elementum vitae.
+    links: [{ label: "Site", href: "https://www.borderpass.ai/" }],
+    markdown: `
+# Overview\n
+Borderpass is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed over several core features + products
+since joining the team in May 2025. 
 
-## What I focused on\n
-- Shipping reliable internal dashboards for team visibility.
-- Reducing release friction with CI quality gates.
-- Improving onboarding with architecture docs and starter templates.
+# My key contributions \n
+- Leveraged **AI vision models** such as **Google Gemini** to read & extract information from user documents, constructing a comprehesive overview of applicant information
+- Developed headless **Puppetteer** automations for performing browser-based tasks such as form submissions, resulting in hundreds of hours saved for the operations team weekly
+- Delivered an end-to-end **AI Job Search Tool** which produces LLM synthesized filters based off of user resumes to perform a web crawl of popular job sites, returning a personalized list of job postings in seconds
+- Designed, built, and maintained several core **AWS lambda functions** for document processing and integration
+
 
 ![System planning placeholder](/placeholders/placeholder-1.svg)
 
-## Outcomes\n
-Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Aenean elementum, velit non gravida sodales, ipsum neque facilisis dolor, et hendrerit arcu nibh non elit.
+
 `,
   },
   {
@@ -62,6 +73,7 @@ Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia
         icon: "Link2",
       },
     ],
+    links: [{ label: "Demo", href: "https://demo.example.com" }, { label: "GitHub", href: "https://github.com/example/portfolio-console" }],
     markdown: `## Project Story\n
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed in arcu odio. Integer a tellus neque. Morbi fermentum vehicula convallis.
 
@@ -89,6 +101,7 @@ Aenean condimentum varius velit, id finibus est tempus sit amet. Pellentesque te
       },
       { label: "Status", value: "Ongoing", icon: "CalendarRange" },
     ],
+    links: [{ label: "GitHub", href: "https://github.com/example/writing-lab" }],
     markdown: `## Why this exists\n
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam ac nibh et mauris gravida interdum.
 

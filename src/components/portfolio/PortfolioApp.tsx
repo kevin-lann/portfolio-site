@@ -39,6 +39,7 @@ export function PortfolioApp() {
   const [activeEntryId, setActiveEntryId] = useState<string>('');
   const [leftWidth, setLeftWidth] = useState(40);
   const [middleWidth, setMiddleWidth] = useState(40);
+  const [areSidebarsCollapsed, setAreSidebarsCollapsed] = useState(false);
   const [colorMode, setColorMode] = useState<ColorMode>(() => {
     if (typeof window === 'undefined') return 'dark';
     const stored = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY);
@@ -91,9 +92,11 @@ export function PortfolioApp() {
       const key = event.key.toLowerCase();
 
       if (key === 'l') {
-        setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+        setColorMode('light');
       } else if (key === 'd') {
         setColorMode('dark');
+      } else if (key === 'h') {
+        setAreSidebarsCollapsed((prev) => !prev);
       }
     };
 
@@ -110,6 +113,10 @@ export function PortfolioApp() {
   const onEntrySelect = (section: SectionKey, entryId: string) => {
     setActiveSection(section);
     setActiveEntryId(entryId);
+  };
+
+  const toggleSidebars = () => {
+    setAreSidebarsCollapsed((prev) => !prev);
   };
 
   const beginDrag = (handle: HandleKey, clientX: number) => {
@@ -188,26 +195,34 @@ export function PortfolioApp() {
   return (
     <main className="portfolio-root" data-color-mode={colorMode}>
       <div className="portfolio-shell">
-        <div className="portfolio-column" style={{ width: `${leftWidth}%` }}>
-          <LeftSidebar
-            activeSection={activeSection}
-            activeEntryId={activeEntry.id}
-            entriesBySection={entriesBySection}
-            onSectionChange={onSectionChange}
-            onEntrySelect={onEntrySelect}
-          />
-        </div>
+        {!areSidebarsCollapsed ? (
+          <>
+            <div className="portfolio-column" style={{ width: `${leftWidth}%` }}>
+              <LeftSidebar
+                activeSection={activeSection}
+                activeEntryId={activeEntry.id}
+                entriesBySection={entriesBySection}
+                onSectionChange={onSectionChange}
+                onEntrySelect={onEntrySelect}
+              />
+            </div>
 
-        <SplitHandle onMouseDown={handleLeftMouseDown} onTouchStart={handleLeftTouchStart} />
+            <SplitHandle onMouseDown={handleLeftMouseDown} onTouchStart={handleLeftTouchStart} />
 
-        <div className="portfolio-column" style={{ width: `${middleWidth}%` }}>
-          <MetadataPanel entry={activeEntry} />
-        </div>
+            <div className="portfolio-column" style={{ width: `${middleWidth}%` }}>
+              <MetadataPanel entry={activeEntry} />
+            </div>
 
-        <SplitHandle onMouseDown={handleMiddleMouseDown} onTouchStart={handleMiddleTouchStart} />
+            <SplitHandle onMouseDown={handleMiddleMouseDown} onTouchStart={handleMiddleTouchStart} />
+          </>
+        ) : null}
 
         <div className="portfolio-column grow">
-          <ContentPanel entry={activeEntry} />
+          <ContentPanel
+            entry={activeEntry}
+            areSidebarsCollapsed={areSidebarsCollapsed}
+            onToggleSidebars={toggleSidebars}
+          />
         </div>
       </div>
     </main>

@@ -53,13 +53,17 @@ export function MetadataPanel({ entry }: MetadataPanelProps) {
                 className={`metadata-item ${fieldSizeClass} text-sm flex items-start gap-2.5`}
               >
                 {iconName ? (
-                  <DynamicIcon
-                    name={iconName}
-                    size={14}
-                    strokeWidth={1.75}
-                    className="mt-0.5 text-(--light) shrink-0"
+                  <span
+                    className="mt-0.5 inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center"
                     aria-hidden="true"
-                  />
+                  >
+                    <DynamicIcon
+                      name={iconName}
+                      size={14}
+                      strokeWidth={1.75}
+                      className="text-(--light)"
+                    />
+                  </span>
                 ) : null}
 
                 <div>

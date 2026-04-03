@@ -27,12 +27,12 @@ export function LeftSidebar({
       <div>
         <h1 className="logo fancy-font">Kevin Lan</h1>
         <p className="intro-copy text-sm">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer et dui id lacus
-          efficitur eleifend non ac erat.
+          Software engineer based in Toronto building scalable digital solutions.
         </p>
         <p className="shortcut-hints text-xs" aria-label="Keyboard shortcuts">
           <span><kbd>L</kbd> light mode</span>
           <span><kbd>D</kbd> dark mode</span>
+          <span><kbd>H</kbd> hide/show sidebars</span>
         </p>
       </div>
 
