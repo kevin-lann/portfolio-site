@@ -20,7 +20,7 @@ interface DragState {
 
 const LEFT_MIN = 0;
 const MIDDLE_MIN = 0;
-const RIGHT_MIN = 0;
+const RIGHT_MIN = 50;
 const COLOR_MODE_STORAGE_KEY = 'portfolio-color-mode';
 
 const isColorMode = (value: string): value is ColorMode =>
@@ -39,8 +39,8 @@ export function PortfolioApp() {
   const [activeSection, setActiveSection] = useState<SectionKey>('experience');
   const [activeEntryId, setActiveEntryId] = useState<string>('');
   const [isHomeView, setIsHomeView] = useState(true);
-  const [leftWidth, setLeftWidth] = useState(40);
-  const [middleWidth, setMiddleWidth] = useState(40);
+  const [leftWidth, setLeftWidth] = useState(20);
+  const [middleWidth, setMiddleWidth] = useState(20);
   const [areSidebarsCollapsed, setAreSidebarsCollapsed] = useState(false);
   const [colorMode, setColorMode] = useState<ColorMode>(() => {
     if (typeof window === 'undefined') return 'dark';
@@ -340,7 +340,10 @@ Shortcuts: \`L\` light mode, \`D\` dark mode, \`S\` summer mode, \`F\` fullscree
       <div className="portfolio-shell">
         <div
           className={`portfolio-column sidebar-column ${areSidebarsCollapsed ? 'is-collapsed' : ''}`}
-          style={{ width: areSidebarsCollapsed ? '0%' : `${leftWidth}%` }}
+          style={{
+            width: areSidebarsCollapsed ? '0%' : `${leftWidth}%`,
+            flex: areSidebarsCollapsed ? '0 0 0%' : `0 0 ${leftWidth}%`
+          }}
           aria-hidden={areSidebarsCollapsed}
         >
           <LeftSidebar
@@ -365,7 +368,10 @@ Shortcuts: \`L\` light mode, \`D\` dark mode, \`S\` summer mode, \`F\` fullscree
           <>
             <div
               className={`portfolio-column sidebar-column ${areSidebarsCollapsed ? 'is-collapsed' : ''}`}
-              style={{ width: areSidebarsCollapsed ? '0%' : `${middleWidth}%` }}
+              style={{
+                width: areSidebarsCollapsed ? '0%' : `${middleWidth}%`,
+                flex: areSidebarsCollapsed ? '0 0 0%' : `0 0 ${middleWidth}%`
+              }}
               aria-hidden={areSidebarsCollapsed}
             >
               <MetadataPanel entry={activeEntry} />

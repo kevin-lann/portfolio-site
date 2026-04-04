@@ -440,6 +440,8 @@ body {
   margin-left: auto;
   margin-right: auto;
   color: var(--light);
+  overflow-wrap: anywhere;
+  word-break: break-word;
 }
 
 .content-markdown.is-home {
