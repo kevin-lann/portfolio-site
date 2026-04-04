@@ -1,0 +1,32 @@
+---
+import { render } from 'astro:content';
+
+import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
+import { getEntriesBySection, getPortfolioEntries, toEntrySlug } from '../../lib/portfolio';
+
+export async function getStaticPaths() {
+  const entries = await getPortfolioEntries();
+
+  return entries
+    .filter((entry) => entry.data.section === 'other')
+    .map((entry) => ({
+      params: { slug: toEntrySlug(entry) },
+      props: { entry }
+    }));
+}
+
+const { entry } = Astro.props;
+const entriesBySection = await getEntriesBySection();
+const { Content } = await render(entry);
+---
+
+<PortfolioLayout
+  pageTitle={entry.data.title + ' | Kevin Lan'}
+  entriesBySection={entriesBySection}
+  activeSection={entry.data.section}
+  activeSlug={toEntrySlug(entry)}
+  metadataEntry={entry}
+  contentLinks={entry.data.links}
+>
+  <Content />
+</PortfolioLayout>

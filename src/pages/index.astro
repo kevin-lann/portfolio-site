@@ -1,18 +1,22 @@
 ---
-import { PortfolioApp } from '../components/portfolio/PortfolioApp';
-import '../styles/global.css';
+import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import { HomeHero } from '../components/portfolio/HomeHero';
+import { getEntriesBySection } from '../lib/portfolio';
+
+const entriesBySection = await getEntriesBySection();
 ---
 
-<html lang="en">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Kevin Lan | Portfolio</title>
-	</head>
-	<body>
-		<PortfolioApp client:load />
-	</body>
-</html>
+<PortfolioLayout
+  pageTitle="Kevin Lan | Portfolio"
+  entriesBySection={entriesBySection}
+  isHome={true}
+  contentLinks={[
+    { label: 'GitHub', href: 'https://github.com/' },
+    { label: 'LinkedIn', href: 'https://www.linkedin.com/' }
+  ]}
+>
+  <HomeHero client:load />
+  <h1>Welcome</h1>
+  <p>Use the left sidebar to browse experience, projects, and other work.</p>
+  <p>Use arrow keys to move through experience and project entries.</p>
+</PortfolioLayout>

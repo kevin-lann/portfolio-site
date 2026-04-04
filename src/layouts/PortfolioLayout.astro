@@ -1,0 +1,488 @@
+---
+import '../styles/global.css';
+import { MetadataPanelCollection } from '../components/portfolio/MetadataPanelCollection';
+
+import {
+  sectionLabels,
+  sectionOrder,
+  toEntrySlug,
+  toEntryHref,
+  type PortfolioEntry,
+  type SectionKey
+} from '../lib/portfolio';
+
+interface ContentLink {
+  label: string;
+  href: string;
+}
+
+interface Props {
+  pageTitle: string;
+  entriesBySection: Record<SectionKey, PortfolioEntry[]>;
+  activeSection?: SectionKey;
+  activeSlug?: string;
+  metadataEntry?: PortfolioEntry;
+  contentLinks?: ContentLink[];
+  isHome?: boolean;
+}
+
+const {
+  pageTitle,
+  entriesBySection,
+  activeSection,
+  activeSlug,
+  metadataEntry,
+  contentLinks = [],
+  isHome = false
+} = Astro.props;
+
+const socials = [
+  { label: 'linkedin', href: 'https://www.linkedin.com/' },
+  { label: 'github', href: 'https://github.com/' },
+  { label: 'twitter', href: 'https://twitter.com/' }
+];
+
+const isActiveEntry = (entry: PortfolioEntry) =>
+  activeSection === entry.data.section && activeSlug === toEntrySlug(entry);
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <main class="portfolio-root" data-color-mode="dark">
+      <div class="portfolio-shell">
+        <div
+          class="portfolio-column sidebar-column"
+          data-column="left"
+          data-width="20"
+          style="width: 20%; flex: 0 0 20%;"
+        >
+          <aside class="portfolio-panel left-panel text-sm">
+            <div>
+              <a href="/" class="logo-button">
+                <h1 class="logo fancy-font">Kevin Lan</h1>
+              </a>
+              <p class="intro-copy text-sm">
+                Software engineer based in Toronto building scalable digital solutions. University of Toronto
+                Scarborough 4th year CS student (Entrepreneurship Stream)
+              </p>
+              <p class="shortcut-hints text-xs" aria-label="Keyboard shortcuts">
+                <span><kbd>L</kbd> light mode</span>
+                <span><kbd>D</kbd> dark mode</span>
+                <span><kbd>H</kbd> hide/show sidebars</span>
+                <span><kbd>F</kbd> fullscreen</span>
+                <span><kbd>S</kbd> summer mode</span>
+              </p>
+            </div>
+
+            <nav class="nav-group" aria-label="Main sections">
+              <span class="group-label">sections</span>
+              <a href="/" class:list={["nav-link", { active: isHome }]}>home</a>
+              {sectionOrder.map((section) => (
+                <div class="section-block">
+                  <span class:list={["nav-link", { active: activeSection === section }]}>
+                    {sectionLabels[section]}
+                  </span>
+
+                  {entriesBySection[section].length > 0 ? (
+                    <div class="subnav-group">
+                      {entriesBySection[section].map((entry) => (
+                        <a
+                          href={toEntryHref(entry)}
+                          data-entry-section={entry.data.section}
+                          class:list={["subnav-link", { active: isActiveEntry(entry) }]}
+                        >
+                          <div class="flex gap-2 text-left">
+                            <span class="text-xs">∟</span>
+                            {entry.data.title}
+                          </div>
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </nav>
+
+            <div class="social-group">
+              <span class="group-label">socials</span>
+              {socials.map((social) => (
+                <a href={social.href} target="_blank" rel="noreferrer" class="text-link">
+                  {social.label}
+                </a>
+              ))}
+            </div>
+          </aside>
+        </div>
+
+        <div class="split-handle" data-handle="left" aria-hidden="true"><span></span></div>
+
+        {metadataEntry ? (
+          <>
+            <div
+              class="portfolio-column sidebar-column"
+              data-column="middle"
+              data-width="20"
+              style="width: 20%; flex: 0 0 20%;"
+            >
+              <MetadataPanelCollection
+                title={metadataEntry.data.title}
+                overview={metadataEntry.data.overview}
+                metadata={metadataEntry.data.metadata}
+                client:load
+              />
+            </div>
+
+            <div class="split-handle" data-handle="middle" aria-hidden="true"><span></span></div>
+          </>
+        ) : null}
+
+        <div class="portfolio-column grow" data-column="content">
+          <section class="portfolio-panel content-panel text-sm" aria-label="Entry content">
+            <div class="content-toolbar">
+              <button
+                type="button"
+                class="collapse-toggle"
+                data-action="toggle-sidebars"
+                aria-label="Toggle sidebars"
+                title="Toggle sidebars (H)"
+              >
+                &lt;
+              </button>
+              <div class="content-links">
+                {contentLinks.map((link) => (
+                  <a href={link.href} target="_blank" rel="noopener noreferrer" class="text-sm underline">
+                    {link.label}
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            <div class:list={["content-markdown mb-[20vh]", { 'is-home': isHome }]}>
+              <slot />
+            </div>
+          </section>
+        </div>
+      </div>
+      <div class="circle" aria-hidden="true"></div>
+    </main>
+
+    <script is:inline>
+      (() => {
+        const LEFT_MIN = 0;
+        const MIDDLE_MIN = 0;
+        const RIGHT_MIN = 50;
+        const COLOR_MODE_STORAGE_KEY = 'portfolio-color-mode';
+
+        const root = document.documentElement;
+        const leftColumn = document.querySelector('[data-column="left"]');
+        const middleColumn = document.querySelector('[data-column="middle"]');
+        const leftHandle = document.querySelector('[data-handle="left"]');
+        const middleHandle = document.querySelector('[data-handle="middle"]');
+        const collapseToggle = document.querySelector('[data-action="toggle-sidebars"]');
+        const circleElement = document.querySelector('.circle');
+        const contentMarkdown = document.querySelector('.content-markdown');
+
+        if (!leftColumn || !leftHandle || !collapseToggle) return;
+
+        const hasMiddle = !!middleColumn && !!middleHandle;
+        let leftWidth = Number(leftColumn.getAttribute('data-width') || 20);
+        let middleWidth = Number(middleColumn?.getAttribute('data-width') || 20);
+        let areSidebarsCollapsed = false;
+
+        const validColorModes = new Set(['dark', 'light', 'summer']);
+        const storedMode = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY) || 'dark';
+        let colorMode = validColorModes.has(storedMode) ? storedMode : 'dark';
+
+        const summerAudio = new Audio('/sounds/breach-ambience.mp3');
+        summerAudio.loop = true;
+        summerAudio.preload = 'auto';
+        summerAudio.volume = 0.35;
+
+        const setColorMode = (mode) => {
+          if (!validColorModes.has(mode)) return;
+          colorMode = mode;
+          root.setAttribute('data-color-mode', colorMode);
+          window.localStorage.setItem(COLOR_MODE_STORAGE_KEY, colorMode);
+
+          if (colorMode === 'summer') {
+            void summerAudio.play().catch(() => undefined);
+          } else {
+            summerAudio.pause();
+            summerAudio.currentTime = 0;
+          }
+        };
+
+        const setToggleLabel = () => {
+          collapseToggle.textContent = areSidebarsCollapsed ? '>' : '<';
+        };
+
+        const applyLayout = () => {
+          leftColumn.classList.toggle('is-collapsed', areSidebarsCollapsed);
+          leftColumn.setAttribute('aria-hidden', String(areSidebarsCollapsed));
+          leftColumn.style.width = areSidebarsCollapsed ? '0%' : leftWidth + '%';
+          leftColumn.style.flex = areSidebarsCollapsed ? '0 0 0%' : '0 0 ' + leftWidth + '%';
+
+          leftHandle.classList.toggle('is-collapsed', areSidebarsCollapsed);
+
+          if (hasMiddle && middleColumn && middleHandle) {
+            middleColumn.classList.toggle('is-collapsed', areSidebarsCollapsed);
+            middleColumn.setAttribute('aria-hidden', String(areSidebarsCollapsed));
+            middleColumn.style.width = areSidebarsCollapsed ? '0%' : middleWidth + '%';
+            middleColumn.style.flex = areSidebarsCollapsed ? '0 0 0%' : '0 0 ' + middleWidth + '%';
+            middleHandle.classList.toggle('is-collapsed', areSidebarsCollapsed);
+          }
+
+          setToggleLabel();
+        };
+
+        setColorMode(colorMode);
+        applyLayout();
+
+        const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
+        let dragState = null;
+
+        const updateDrag = (clientX) => {
+          if (!dragState) return;
+
+          const delta = ((clientX - dragState.startX) / window.innerWidth) * 100;
+
+          if (dragState.handle === 'left') {
+            const maxLeft = hasMiddle ? 100 - RIGHT_MIN - middleWidth : 100 - RIGHT_MIN;
+            leftWidth = clamp(dragState.startLeft + delta, LEFT_MIN, maxLeft);
+          } else {
+            const maxMiddle = 100 - RIGHT_MIN - leftWidth;
+            middleWidth = clamp(dragState.startMiddle + delta, MIDDLE_MIN, maxMiddle);
+          }
+
+          applyLayout();
+        };
+
+        const onMouseMove = (event) => updateDrag(event.clientX);
+        const onTouchMove = (event) => {
+          if (!event.touches[0]) return;
+          updateDrag(event.touches[0].clientX);
+        };
+
+        const endDrag = () => {
+          dragState = null;
+          document.body.classList.remove('is-dragging-columns');
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('touchmove', onTouchMove);
+        };
+
+        const attachDragListeners = () => {
+          document.body.classList.add('is-dragging-columns');
+          window.addEventListener('mousemove', onMouseMove);
+          window.addEventListener('mouseup', endDrag, { once: true });
+          window.addEventListener('touchmove', onTouchMove);
+          window.addEventListener('touchend', endDrag, { once: true });
+        };
+
+        const beginDrag = (handle, clientX) => {
+          if (areSidebarsCollapsed) return;
+
+          dragState = {
+            handle,
+            startX: clientX,
+            startLeft: leftWidth,
+            startMiddle: middleWidth
+          };
+          attachDragListeners();
+        };
+
+        leftHandle.addEventListener('mousedown', (event) => beginDrag('left', event.clientX));
+        leftHandle.addEventListener('touchstart', (event) => {
+          if (!event.touches[0]) return;
+          beginDrag('left', event.touches[0].clientX);
+        });
+
+        if (hasMiddle && middleHandle) {
+          middleHandle.addEventListener('mousedown', (event) => beginDrag('middle', event.clientX));
+          middleHandle.addEventListener('touchstart', (event) => {
+            if (!event.touches[0]) return;
+            beginDrag('middle', event.touches[0].clientX);
+          });
+        }
+
+        collapseToggle.addEventListener('click', () => {
+          areSidebarsCollapsed = !areSidebarsCollapsed;
+          applyLayout();
+        });
+
+        let lightbox = null;
+        const closeLightbox = () => {
+          if (!lightbox) return;
+          lightbox.remove();
+          lightbox = null;
+          document.body.style.overflow = '';
+        };
+
+        if (contentMarkdown) {
+          contentMarkdown.addEventListener('click', (event) => {
+            const target = event.target;
+            if (!(target instanceof HTMLImageElement)) return;
+
+            event.preventDefault();
+            const overlay = document.createElement('div');
+            overlay.className = 'image-lightbox';
+            overlay.setAttribute('role', 'dialog');
+            overlay.setAttribute('aria-modal', 'true');
+            overlay.setAttribute('aria-label', target.alt || 'Expanded image');
+
+            const image = document.createElement('img');
+            image.className = 'image-lightbox-image';
+            image.src = target.src;
+            image.alt = target.alt || '';
+            image.addEventListener('click', (innerEvent) => innerEvent.stopPropagation());
+
+            overlay.appendChild(image);
+            overlay.addEventListener('click', closeLightbox);
+            document.body.appendChild(overlay);
+            document.body.style.overflow = 'hidden';
+            lightbox = overlay;
+          });
+        }
+
+        const handleArrowNavigation = (key) => {
+          const selectableEntries = Array.from(
+            document.querySelectorAll(
+              'a[data-entry-section="experience"], a[data-entry-section="projects"]'
+            )
+          );
+
+          if (!selectableEntries.length) return;
+
+          const currentPath = window.location.pathname.replace(/\/$/, '');
+          const currentIndex = selectableEntries.findIndex((entry) => {
+            const entryPath = new URL(entry.href).pathname.replace(/\/$/, '');
+            return entryPath === currentPath;
+          });
+
+          const fallbackIndex = key === 'arrowdown' ? 0 : selectableEntries.length - 1;
+          const startIndex = currentIndex === -1 ? fallbackIndex : currentIndex;
+          const step = key === 'arrowdown' ? 1 : -1;
+          const nextIndex = (startIndex + step + selectableEntries.length) % selectableEntries.length;
+          const nextEntry = selectableEntries[nextIndex];
+
+          if (nextEntry) {
+            window.location.assign(nextEntry.href);
+          }
+        };
+
+        window.addEventListener('keydown', (event) => {
+          if (lightbox && event.key === 'Escape') {
+            closeLightbox();
+            return;
+          }
+
+          const target = event.target;
+          const isTyping =
+            target instanceof HTMLElement &&
+            (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA' || target.isContentEditable);
+          if (isTyping) return;
+
+          const key = event.key.toLowerCase();
+
+          if (key === 'f') {
+            if (document.fullscreenElement) {
+              void document.exitFullscreen().catch(() => undefined);
+            } else {
+              void document.documentElement.requestFullscreen().catch(() => undefined);
+            }
+            return;
+          }
+
+          if (key === 'l') {
+            setColorMode('light');
+            return;
+          }
+
+          if (key === 'd') {
+            setColorMode('dark');
+            return;
+          }
+
+          if (key === 's') {
+            setColorMode('summer');
+            return;
+          }
+
+          if (key === 'h') {
+            areSidebarsCollapsed = !areSidebarsCollapsed;
+            applyLayout();
+            return;
+          }
+
+          if (key === 'arrowdown' || key === 'arrowup') {
+            event.preventDefault();
+            handleArrowNavigation(key);
+          }
+        });
+
+        if (circleElement instanceof HTMLDivElement) {
+          const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+          const previousMouse = { x: mouse.x, y: mouse.y };
+          const circle = { x: mouse.x, y: mouse.y };
+
+          let currentScale = 0;
+          let currentAngle = 0;
+          let frameId = 0;
+          let hasMoved = false;
+          const speed = 0.17;
+
+          const handleMouseMove = (event) => {
+            mouse.x = event.clientX;
+            mouse.y = event.clientY;
+            if (!hasMoved) {
+              hasMoved = true;
+              circleElement.classList.add('is-visible');
+            }
+          };
+
+          const tick = () => {
+            circle.x += (mouse.x - circle.x) * speed;
+            circle.y += (mouse.y - circle.y) * speed;
+            const translateTransform = 'translate(' + circle.x + 'px, ' + circle.y + 'px)';
+
+            const deltaMouseX = mouse.x - previousMouse.x;
+            const deltaMouseY = mouse.y - previousMouse.y;
+            previousMouse.x = mouse.x;
+            previousMouse.y = mouse.y;
+
+            const mouseVelocity = Math.min(Math.sqrt(deltaMouseX ** 2 + deltaMouseY ** 2) * 4, 150);
+            const scaleValue = (mouseVelocity / 150) * 0.5;
+            currentScale += (scaleValue - currentScale) * speed;
+            const scaleTransform = 'scale(' + (1 + currentScale) + ', ' + (1 - currentScale) + ')';
+
+            const angle = (Math.atan2(deltaMouseY, deltaMouseX) * 180) / Math.PI;
+            if (mouseVelocity > 20) {
+              currentAngle = angle;
+            }
+            const rotateTransform = 'rotate(' + currentAngle + 'deg)';
+
+            circleElement.style.transform =
+              translateTransform + ' ' + rotateTransform + ' ' + scaleTransform;
+
+            frameId = window.requestAnimationFrame(tick);
+          };
+
+          window.addEventListener('mousemove', handleMouseMove);
+          frameId = window.requestAnimationFrame(tick);
+
+          window.addEventListener('beforeunload', () => {
+            window.cancelAnimationFrame(frameId);
+            window.removeEventListener('mousemove', handleMouseMove);
+          });
+        }
+      })();
+    </script>
+  </body>
+</html>
