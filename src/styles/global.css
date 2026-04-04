@@ -582,6 +582,25 @@ body {
   font-size: 0.84rem;
 }
 
+.content-markdown pre.astro-code {
+  background-color: var(--code-bg) !important;
+  border: 1px solid var(--line);
+}
+
+:root[data-color-mode="dark"] .content-markdown pre.astro-code,
+:root[data-color-mode="dark"] .content-markdown pre.astro-code span {
+  color: var(--shiki-dark, var(--code-text)) !important;
+  background-color: var(--shiki-dark-bg, var(--code-bg)) !important;
+}
+
+:root[data-color-mode="light"] .content-markdown pre.astro-code,
+:root[data-color-mode="light"] .content-markdown pre.astro-code span,
+:root[data-color-mode="summer"] .content-markdown pre.astro-code,
+:root[data-color-mode="summer"] .content-markdown pre.astro-code span {
+  color: var(--shiki-light, var(--code-text)) !important;
+  background-color: var(--shiki-light-bg, var(--code-bg)) !important;
+}
+
 .content-markdown pre code.hljs .hljs-keyword,
 .content-markdown pre code.hljs .hljs-selector-tag,
 .content-markdown pre code.hljs .hljs-title.function_ {
