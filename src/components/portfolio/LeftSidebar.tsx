@@ -34,6 +34,7 @@ export function LeftSidebar({
           <span><kbd>D</kbd> dark mode</span>
           <span><kbd>H</kbd> hide/show sidebars</span>
           <span><kbd>F</kbd> fullscreen</span>
+          <span><kbd>S</kbd> summer mode</span>
         </p>
       </div>
 

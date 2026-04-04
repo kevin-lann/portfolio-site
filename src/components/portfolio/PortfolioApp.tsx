@@ -9,7 +9,7 @@ import { SplitHandle } from './SplitHandle';
 import type { PortfolioEntry, SectionKey } from './types';
 
 type HandleKey = 'left' | 'middle';
-type ColorMode = 'dark' | 'light';
+type ColorMode = 'dark' | 'light' | 'summer';
 
 interface DragState {
   handle: HandleKey;
@@ -23,7 +23,8 @@ const MIDDLE_MIN = 0;
 const RIGHT_MIN = 0;
 const COLOR_MODE_STORAGE_KEY = 'portfolio-color-mode';
 
-const isColorMode = (value: string): value is ColorMode => value === 'dark' || value === 'light';
+const isColorMode = (value: string): value is ColorMode =>
+  value === 'dark' || value === 'light' || value === 'summer';
 
 /**
  * Clamps a value between a minimum and maximum value.
@@ -48,6 +49,7 @@ export function PortfolioApp() {
 
   const dragState = useRef<DragState | null>(null);
   const cursorCircleRef = useRef<HTMLDivElement | null>(null);
+  const summerAudioRef = useRef<HTMLAudioElement | null>(null);
 
   const entriesBySection = useMemo(
     () =>
@@ -80,6 +82,33 @@ export function PortfolioApp() {
   }, [colorMode]);
 
   useEffect(() => {
+    const audio = new Audio('/sounds/breach-ambience.mp3');
+    audio.loop = true;
+    audio.preload = 'auto';
+    audio.volume = 0.35;
+    summerAudioRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+      summerAudioRef.current = null;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = summerAudioRef.current;
+    if (!audio) return;
+
+    if (colorMode === 'summer') {
+      void audio.play().catch(() => undefined);
+      return;
+    }
+
+    audio.pause();
+    audio.currentTime = 0;
+  }, [colorMode]);
+
+  useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null;
       const isTyping =
@@ -105,6 +134,27 @@ export function PortfolioApp() {
         setColorMode('light');
       } else if (key === 'd') {
         setColorMode('dark');
+      } else if (key === 's') {
+        setColorMode('summer');
+      } else if (key === 'arrowdown' || key === 'arrowup') {
+        event.preventDefault();
+
+        const selectableEntries = [
+          ...entriesBySection.experience,
+          ...entriesBySection.projects
+        ];
+        if (!selectableEntries.length) return;
+
+        const currentIndex = selectableEntries.findIndex((entry) => entry.id === activeEntryId);
+        const fallbackIndex = key === 'arrowdown' ? 0 : selectableEntries.length - 1;
+        const startIndex = currentIndex === -1 ? fallbackIndex : currentIndex;
+        const step = key === 'arrowdown' ? 1 : -1;
+        const nextIndex =
+          (startIndex + step + selectableEntries.length) % selectableEntries.length;
+        const nextEntry = selectableEntries[nextIndex];
+
+        setActiveSection(nextEntry.section);
+        setActiveEntryId(nextEntry.id);
       } else if (key === 'h') {
         setAreSidebarsCollapsed((prev) => !prev);
       }
@@ -112,7 +162,7 @@ export function PortfolioApp() {
 
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, []);
+  }, [activeEntryId, entriesBySection]);
 
   useEffect(() => {
     const circleElement = cursorCircleRef.current;
@@ -264,27 +314,39 @@ export function PortfolioApp() {
   return (
     <main className="portfolio-root" data-color-mode={colorMode}>
       <div className="portfolio-shell">
-        {!areSidebarsCollapsed ? (
-          <>
-            <div className="portfolio-column" style={{ width: `${leftWidth}%` }}>
-              <LeftSidebar
-                activeSection={activeSection}
-                activeEntryId={activeEntry.id}
-                entriesBySection={entriesBySection}
-                onSectionChange={onSectionChange}
-                onEntrySelect={onEntrySelect}
-              />
-            </div>
+        <div
+          className={`portfolio-column sidebar-column ${areSidebarsCollapsed ? 'is-collapsed' : ''}`}
+          style={{ width: areSidebarsCollapsed ? '0%' : `${leftWidth}%` }}
+          aria-hidden={areSidebarsCollapsed}
+        >
+          <LeftSidebar
+            activeSection={activeSection}
+            activeEntryId={activeEntry.id}
+            entriesBySection={entriesBySection}
+            onSectionChange={onSectionChange}
+            onEntrySelect={onEntrySelect}
+          />
+        </div>
 
-            <SplitHandle onMouseDown={handleLeftMouseDown} onTouchStart={handleLeftTouchStart} />
+        <SplitHandle
+          onMouseDown={handleLeftMouseDown}
+          onTouchStart={handleLeftTouchStart}
+          isCollapsed={areSidebarsCollapsed}
+        />
 
-            <div className="portfolio-column" style={{ width: `${middleWidth}%` }}>
-              <MetadataPanel entry={activeEntry} />
-            </div>
+        <div
+          className={`portfolio-column sidebar-column ${areSidebarsCollapsed ? 'is-collapsed' : ''}`}
+          style={{ width: areSidebarsCollapsed ? '0%' : `${middleWidth}%` }}
+          aria-hidden={areSidebarsCollapsed}
+        >
+          <MetadataPanel entry={activeEntry} />
+        </div>
 
-            <SplitHandle onMouseDown={handleMiddleMouseDown} onTouchStart={handleMiddleTouchStart} />
-          </>
-        ) : null}
+        <SplitHandle
+          onMouseDown={handleMiddleMouseDown}
+          onTouchStart={handleMiddleTouchStart}
+          isCollapsed={areSidebarsCollapsed}
+        />
 
         <div className="portfolio-column grow">
           <ContentPanel

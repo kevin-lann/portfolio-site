@@ -11,6 +11,13 @@
   --muted: #9a9a9a;
   --line: #1a1a1a;
   --lime: #b8ff5c;
+  --code-bg: #101214;
+  --code-inline-bg: #171a1f;
+  --code-text: #d4d7dd;
+  --code-keyword: #f6d877;
+  --code-string: #95d5ff;
+  --code-comment: #7d838f;
+  --code-variable: #c7f8a1;
   color-scheme: dark;
 }
 
@@ -23,6 +30,32 @@
   --muted: #6f6a62;
   --line: #d9d2c7;
   --lime: #36af4e;
+  --code-bg: #f4f0e8;
+  --code-inline-bg: #ece7dd;
+  --code-text: #2b2a28;
+  --code-keyword: #8f5414;
+  --code-string: #005a8d;
+  --code-comment: #7b766e;
+  --code-variable: #1f6a3a;
+  color-scheme: light;
+}
+
+:root[data-color-mode="summer"] {
+  --bg: #ffffff;
+  --panel: #f8f6f0;
+  --panel-2: #efebe3;
+  --light: #181818;
+  --text: #404040;
+  --muted: #6f6a62;
+  --line: #d9d2c7;
+  --lime: #36af4e;
+  --code-bg: #f4f0e8;
+  --code-inline-bg: #ece7dd;
+  --code-text: #2b2a28;
+  --code-keyword: #8f5414;
+  --code-string: #005a8d;
+  --code-comment: #7b766e;
+  --code-variable: #1f6a3a;
   color-scheme: light;
 }
 
@@ -41,6 +74,49 @@ body {
   color: var(--text);
   font-family: "Fragment Mono", monospace;
   line-height: 1.55;
+  transition:
+    background-color 280ms ease-in-out,
+    background-image 280ms ease-in-out,
+    color 280ms ease-in-out;
+}
+
+:root[data-color-mode="summer"] body {
+  background-color: #ffffff;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+    url('/background/beach.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root[data-color-mode="summer"] .portfolio-root {
+  background-color: #ffffff;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.85)),
+    url('/background/beach.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root[data-color-mode="summer"] .left-panel,
+:root[data-color-mode="summer"] .content-panel {
+  background-image: linear-gradient(rgba(248, 246, 240, 0.85), rgba(248, 246, 240, 0.85)),
+    url('/background/beach.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root[data-color-mode="summer"] .metadata-panel {
+  background-image: linear-gradient(rgba(239, 235, 227, 0.85), rgba(239, 235, 227, 0.85)),
+    url('/background/beach.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 .circle {
@@ -90,10 +166,22 @@ body {
 
 .portfolio-column {
   min-width: 0;
+  transition:
+    width 320ms ease-in-out,
+    opacity 220ms ease-in-out;
 }
 
 .portfolio-column.grow {
   flex: 1 1 auto;
+}
+
+.sidebar-column {
+  overflow: hidden;
+}
+
+.sidebar-column.is-collapsed {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .portfolio-panel {
@@ -101,6 +189,11 @@ body {
   overflow-y: auto;
   padding: 1.25rem;
   border-right: 1px solid var(--line);
+  transition:
+    background-color 280ms ease-in-out,
+    background-image 280ms ease-in-out,
+    border-color 280ms ease-in-out,
+    color 280ms ease-in-out;
 }
 
 .content-panel {
@@ -208,6 +301,9 @@ body {
   text-underline-offset: 0.2em;
   cursor: pointer;
   padding: 0;
+  transition:
+    color 280ms ease-in-out,
+    text-decoration-color 280ms ease-in-out;
 }
 
 .subnav-link {
@@ -234,6 +330,9 @@ body {
   padding: 0.75rem;
   margin-bottom: 0.85rem;
   background: #090909;
+  transition:
+    border-color 280ms ease-in-out,
+    background-color 280ms ease-in-out;
 }
 
 .entry-card.active {
@@ -264,9 +363,8 @@ body {
 
 .metadata-list {
   margin: 0;
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-auto-flow: dense;
+  display: flex;
+  flex-direction: column;
   gap: 0.65rem;
   margin-top: 1rem;
 }
@@ -388,7 +486,61 @@ body {
   display: block;
   margin: 1rem 0;
   border: 1px solid var(--line);
+  border-radius: 0.6rem;
   background: #111;
+}
+
+.content-markdown code {
+  font-family: "Fragment Mono", monospace;
+}
+
+.content-markdown :not(pre) > code {
+  background: var(--code-inline-bg);
+  border: 1px solid var(--line);
+  border-radius: 0.3rem;
+  color: var(--code-text);
+  font-size: 0.9em;
+  padding: 0.08rem 0.3rem;
+}
+
+.content-markdown pre {
+  margin: 1rem 0;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: var(--code-bg);
+  padding: 0.95rem 1rem;
+  overflow-x: auto;
+}
+
+.content-markdown pre code {
+  display: block;
+  color: var(--code-text);
+  line-height: 1.6;
+  font-size: 0.84rem;
+}
+
+.content-markdown pre code.hljs .hljs-keyword,
+.content-markdown pre code.hljs .hljs-selector-tag,
+.content-markdown pre code.hljs .hljs-title.function_ {
+  color: var(--code-keyword);
+}
+
+.content-markdown pre code.hljs .hljs-string,
+.content-markdown pre code.hljs .hljs-number,
+.content-markdown pre code.hljs .hljs-literal {
+  color: var(--code-string);
+}
+
+.content-markdown pre code.hljs .hljs-comment,
+.content-markdown pre code.hljs .hljs-quote {
+  color: var(--code-comment);
+}
+
+.content-markdown pre code.hljs .hljs-variable,
+.content-markdown pre code.hljs .hljs-attr,
+.content-markdown pre code.hljs .hljs-property,
+.content-markdown pre code.hljs .hljs-title.class_ {
+  color: var(--code-variable);
 }
 
 .content-toolbar {
@@ -435,6 +587,20 @@ body {
   justify-content: center;
   align-items: center;
   touch-action: none;
+  transition:
+    width 320ms ease-in-out,
+    opacity 220ms ease-in-out,
+    background-color 280ms ease-in-out,
+    border-color 280ms ease-in-out;
+  overflow: hidden;
+}
+
+.split-handle.is-collapsed {
+  width: 0;
+  opacity: 0;
+  border-left: 0;
+  border-right: 0;
+  pointer-events: none;
 }
 
 .split-handle span {

@@ -1,4 +1,5 @@
 import ReactMarkdown from 'react-markdown';
+import rehypeHighlight from 'rehype-highlight';
 import remarkBreaks from 'remark-breaks';
 import remarkGfm from 'remark-gfm';
 
@@ -36,7 +37,12 @@ export function ContentPanel({
         </div>
       </div>
       <div className="content-markdown mb-[20vh]">
-        <ReactMarkdown remarkPlugins={[remarkGfm, remarkBreaks]}>{entry.markdown}</ReactMarkdown>
+        <ReactMarkdown
+          remarkPlugins={[remarkGfm, remarkBreaks]}
+          rehypePlugins={[rehypeHighlight]}
+        >
+          {entry.markdown}
+        </ReactMarkdown>
       </div>
     </section>
   );
