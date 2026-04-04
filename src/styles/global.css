@@ -220,6 +220,14 @@ body {
   color: var(--light);
 }
 
+.logo-button {
+  border: 0;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  text-align: left;
+}
+
 .fancy-font {
   font-family: "Newsreader", serif;
   font-style: italic;
@@ -434,6 +442,18 @@ body {
   color: var(--light);
 }
 
+.content-markdown.is-home {
+  min-height: calc(100vh - 8rem);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+}
+
+.content-markdown.is-home h1 {
+  transform-origin: center;
+}
+
 .content-markdown h2,
 .content-markdown h3 {
   margin-top: 1.5rem;
@@ -488,6 +508,47 @@ body {
   border: 1px solid var(--line);
   border-radius: 0.6rem;
   background: #111;
+}
+
+.content-markdown .content-image-trigger {
+  display: block;
+  width: 100%;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  background: transparent;
+  text-align: inherit;
+}
+
+.content-markdown .content-image {
+  margin: 0;
+  cursor: zoom-in;
+}
+
+.content-markdown .content-image-trigger:focus-visible .content-image {
+  outline: 2px solid var(--lime);
+  outline-offset: 3px;
+}
+
+.image-lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  display: grid;
+  place-items: center;
+  padding: 1.25rem;
+  background: rgba(0, 0, 0, 0.8);
+  cursor: zoom-out;
+}
+
+.image-lightbox-image {
+  width: auto;
+  max-width: min(96vw, 1200px);
+  max-height: 90vh;
+  border-radius: 0.65rem;
+  background: #111;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.55);
+  cursor: default;
 }
 
 .content-markdown code {
@@ -617,6 +678,11 @@ body {
 .is-dragging-columns * {
   cursor: col-resize !important;
   user-select: none;
+}
+
+.is-dragging-columns .portfolio-column,
+.is-dragging-columns .split-handle {
+  transition: none !important;
 }
 
 @media (max-width: 1024px) {

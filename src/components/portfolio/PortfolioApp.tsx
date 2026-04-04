@@ -38,6 +38,7 @@ const clamp = (value: number, min: number, max: number) => Math.min(Math.max(val
 export function PortfolioApp() {
   const [activeSection, setActiveSection] = useState<SectionKey>('experience');
   const [activeEntryId, setActiveEntryId] = useState<string>('');
+  const [isHomeView, setIsHomeView] = useState(true);
   const [leftWidth, setLeftWidth] = useState(40);
   const [middleWidth, setMiddleWidth] = useState(40);
   const [areSidebarsCollapsed, setAreSidebarsCollapsed] = useState(false);
@@ -64,6 +65,24 @@ export function PortfolioApp() {
   );
   const entries = entriesBySection[activeSection];
   const activeEntry = entries.find((entry) => entry.id === activeEntryId) ?? entries[0];
+  const homeEntry: PortfolioEntry = {
+    id: 'home',
+    section: 'other',
+    title: 'Home',
+    overview: '',
+    metadata: [],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/' },
+      { label: 'LinkedIn', href: 'https://www.linkedin.com/' }
+    ],
+    markdown: `
+# Welcome
+
+Use the left sidebar to browse experience and projects.
+
+Shortcuts: \`L\` light mode, \`D\` dark mode, \`S\` summer mode, \`F\` fullscreen, \`H\` hide/show sidebars.
+`
+  };
 
   useEffect(() => {
     if (!entries.length) {
@@ -153,6 +172,7 @@ export function PortfolioApp() {
           (startIndex + step + selectableEntries.length) % selectableEntries.length;
         const nextEntry = selectableEntries[nextIndex];
 
+        setIsHomeView(false);
         setActiveSection(nextEntry.section);
         setActiveEntryId(nextEntry.id);
       } else if (key === 'h') {
@@ -224,12 +244,14 @@ export function PortfolioApp() {
   }, []);
 
   const onSectionChange = (section: SectionKey) => {
+    setIsHomeView(false);
     setActiveSection(section);
     const nextEntries = entriesBySection[section];
     setActiveEntryId(nextEntries[0]?.id ?? '');
   };
 
   const onEntrySelect = (section: SectionKey, entryId: string) => {
+    setIsHomeView(false);
     setActiveSection(section);
     setActiveEntryId(entryId);
   };
@@ -261,7 +283,7 @@ export function PortfolioApp() {
     const delta = ((clientX - state.startX) / window.innerWidth) * 100;
 
     if (state.handle === 'left') {
-      const maxLeft = 100 - RIGHT_MIN - middleWidth;
+      const maxLeft = isHomeView ? 100 - RIGHT_MIN : 100 - RIGHT_MIN - middleWidth;
       const nextLeft = clamp(state.startLeft + delta, LEFT_MIN, maxLeft);
       setLeftWidth(nextLeft);
       return;
@@ -307,7 +329,9 @@ export function PortfolioApp() {
     attachDragListeners();
   };
 
-  if (!activeEntry) {
+  const contentEntry = isHomeView ? homeEntry : activeEntry;
+
+  if (!contentEntry) {
     return null;
   }
 
@@ -320,11 +344,14 @@ export function PortfolioApp() {
           aria-hidden={areSidebarsCollapsed}
         >
           <LeftSidebar
+            isHomeView={isHomeView}
             activeSection={activeSection}
             activeEntryId={activeEntry.id}
             entriesBySection={entriesBySection}
+            onHomeClick={() => setIsHomeView(true)}
             onSectionChange={onSectionChange}
             onEntrySelect={onEntrySelect}
+            onLogoClick={() => setIsHomeView(true)}
           />
         </div>
 
@@ -334,23 +361,28 @@ export function PortfolioApp() {
           isCollapsed={areSidebarsCollapsed}
         />
 
-        <div
-          className={`portfolio-column sidebar-column ${areSidebarsCollapsed ? 'is-collapsed' : ''}`}
-          style={{ width: areSidebarsCollapsed ? '0%' : `${middleWidth}%` }}
-          aria-hidden={areSidebarsCollapsed}
-        >
-          <MetadataPanel entry={activeEntry} />
-        </div>
+        {isHomeView ? null : (
+          <>
+            <div
+              className={`portfolio-column sidebar-column ${areSidebarsCollapsed ? 'is-collapsed' : ''}`}
+              style={{ width: areSidebarsCollapsed ? '0%' : `${middleWidth}%` }}
+              aria-hidden={areSidebarsCollapsed}
+            >
+              <MetadataPanel entry={activeEntry} />
+            </div>
 
-        <SplitHandle
-          onMouseDown={handleMiddleMouseDown}
-          onTouchStart={handleMiddleTouchStart}
-          isCollapsed={areSidebarsCollapsed}
-        />
+            <SplitHandle
+              onMouseDown={handleMiddleMouseDown}
+              onTouchStart={handleMiddleTouchStart}
+              isCollapsed={areSidebarsCollapsed}
+            />
+          </>
+        )}
 
         <div className="portfolio-column grow">
           <ContentPanel
-            entry={activeEntry}
+            entry={contentEntry}
+            isHomeView={isHomeView}
             areSidebarsCollapsed={areSidebarsCollapsed}
             onToggleSidebars={toggleSidebars}
           />

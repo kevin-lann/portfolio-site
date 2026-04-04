@@ -76,7 +76,8 @@ Scrapy crawler is hosted on an AWS lambda split into staging and prod environmen
 \`\`\`
 3. **Construct Job bank URL**: To kick off the search, the url is customized with specific query parameters. Ex:
   
-\`https://www.jobbank.gc.ca/jobsearch/job_search_advanced.xhtml?fn21=21211&fper=F&fwcl=D&term=data+scientist&sort=M&fprov=ON&fskl=%C2%AC100000&fskl=%C2%AC100001&fskl=%C2%AC15141\`
+\`https://www.jobbank.gc.ca/jobsearch/job_search_advanced.xhtml?fn21=21211&fper=F&fwcl=D&term=data+scientist&
+sort=M&fprov=ON&fskl=%C2%AC100000&fskl=%C2%AC100001&fskl=%C2%AC15141\`
   
   - fper=F filters by full time jobs only
   - fwcl=D filters by $40,000-$59,999 salary jobs
@@ -107,6 +108,9 @@ Scrapy crawler is hosted on an AWS lambda split into staging and prod environmen
 \`\`\`
 7. **Filter Data** Feed the results into GPT 4o and have it return the top K results by judging against the user's description and resume.
 8. **Display Results**: The results are displayed in the frontend to the user after polling returns true.
+
+![Job Search Tool](/imgs/job-search-page-1.png)
+![Job Search Tool](/imgs/job-search-page-2.png)
 
 Users can also save their favourite results and view search history.
 
