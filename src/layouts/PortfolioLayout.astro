@@ -84,7 +84,13 @@ const isActiveEntry = (entry: PortfolioEntry) =>
 
             <nav class="nav-group" aria-label="Main sections">
               <span class="group-label">sections</span>
-              <a href="/" class:list={["nav-link", { active: isHome }]}>home</a>
+              <a
+                href="/"
+                data-nav-target="home"
+                class:list={["nav-link", { active: isHome }]}
+              >
+                home
+              </a>
               {sectionOrder.map((section) => (
                 <div class="section-block">
                   <span class:list={["nav-link", { active: activeSection === section }]}>
@@ -211,6 +217,11 @@ const isActiveEntry = (entry: PortfolioEntry) =>
           colorMode = mode;
           root.setAttribute('data-color-mode', colorMode);
           window.localStorage.setItem(COLOR_MODE_STORAGE_KEY, colorMode);
+          window.dispatchEvent(
+            new CustomEvent('portfolio-color-mode-change', {
+              detail: { colorMode }
+            })
+          );
 
           if (colorMode === 'summer') {
             void summerAudio.play().catch(() => undefined);
@@ -354,7 +365,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
         const handleArrowNavigation = (key) => {
           const selectableEntries = Array.from(
             document.querySelectorAll(
-              'a[data-entry-section="experience"], a[data-entry-section="projects"]'
+              'a[data-nav-target="home"], a[data-entry-section="experience"], a[data-entry-section="projects"], a[data-entry-section="other"]'
             )
           );
 
