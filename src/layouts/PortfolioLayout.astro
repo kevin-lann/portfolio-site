@@ -49,7 +49,6 @@ const isActiveEntry = (entry: PortfolioEntry) =>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
@@ -67,10 +66,11 @@ const isActiveEntry = (entry: PortfolioEntry) =>
           <aside class="portfolio-panel left-panel text-sm">
             <div>
               <a href="/" class="logo-button">
-                <h1 class="logo fancy-font">Kevin Lan</h1>
+                <img src="/imgs/logo.png" class="logo-img" />
+                <h1 class="logo fancy-font pl-4">Kevin Lan</h1>
               </a>
               <p class="intro-copy text-sm">
-                Software engineer based in Toronto building scalable digital solutions. University of Toronto
+                Software engineer based in Toronto delivering high-quality solutions. University of Toronto
                 Scarborough 4th year CS student (Entrepreneurship Stream)
               </p>
               <p class="shortcut-hints text-xs" aria-label="Keyboard shortcuts">
@@ -171,7 +171,14 @@ const isActiveEntry = (entry: PortfolioEntry) =>
               </div>
             </div>
 
-            <div class:list={["content-markdown mb-[20vh]", { 'is-home': isHome }]}>
+            <nav class="content-toc" data-content-toc aria-label="Table of contents" hidden>
+              <div class="content-toc-inner">
+                <p class="content-toc-title">on this page</p>
+                <ol class="content-toc-list" data-content-toc-list></ol>
+              </div>
+            </nav>
+
+            <div class:list={["content-markdown mb-[20vh]", { 'is-home': isHome }]} data-content-markdown>
               <slot />
             </div>
           </section>
@@ -193,8 +200,11 @@ const isActiveEntry = (entry: PortfolioEntry) =>
         const leftHandle = document.querySelector('[data-handle="left"]');
         const middleHandle = document.querySelector('[data-handle="middle"]');
         const collapseToggle = document.querySelector('[data-action="toggle-sidebars"]');
+        const contentPanel = document.querySelector('.content-panel');
+        const contentToc = document.querySelector('[data-content-toc]');
+        const contentTocList = document.querySelector('[data-content-toc-list]');
         const circleElement = document.querySelector('.circle');
-        const contentMarkdown = document.querySelector('.content-markdown');
+        const contentMarkdown = document.querySelector('[data-content-markdown]');
 
         if (!leftColumn || !leftHandle || !collapseToggle) return;
 
@@ -360,6 +370,100 @@ const isActiveEntry = (entry: PortfolioEntry) =>
             document.body.style.overflow = 'hidden';
             lightbox = overlay;
           });
+        }
+
+        const slugify = (text) =>
+          text
+            .toLowerCase()
+            .trim()
+            .replace(/[^\w\s-]/g, '')
+            .replace(/\s+/g, '-')
+            .replace(/-+/g, '-')
+            .replace(/^-|-$/g, '');
+
+        if (
+          contentPanel instanceof HTMLElement &&
+          contentToc instanceof HTMLElement &&
+          contentTocList instanceof HTMLElement &&
+          contentMarkdown instanceof HTMLElement
+        ) {
+          const headingElements = Array.from(contentMarkdown.querySelectorAll('h1, h2, h3'))
+            .filter((element) => element.textContent && element.textContent.trim().length > 0);
+
+          if (headingElements.length > 1) {
+            const usedIds = new Set();
+            const tocLinks = [];
+
+            headingElements.forEach((heading, index) => {
+              let headingId = heading.id ? heading.id.trim() : '';
+              if (!headingId) {
+                const fallback = slugify(heading.textContent || '') || 'section';
+                headingId = fallback;
+              }
+
+              let uniqueId = headingId;
+              let suffix = 2;
+              while (usedIds.has(uniqueId)) {
+                uniqueId = headingId + '-' + suffix;
+                suffix += 1;
+              }
+
+              usedIds.add(uniqueId);
+              heading.id = uniqueId;
+
+              const item = document.createElement('li');
+              const link = document.createElement('a');
+              link.href = '#' + uniqueId;
+              link.textContent = heading.textContent || '';
+              link.dataset.targetId = uniqueId;
+              link.className = 'content-toc-link';
+              if (index === 0) link.classList.add('is-active');
+              const level = Number(heading.tagName.slice(1));
+              const indentation = Math.max(0, level - 1) * 0.58 + 0.32;
+              link.style.paddingLeft = indentation + 'rem';
+              item.appendChild(link);
+              contentTocList.appendChild(item);
+              tocLinks.push(link);
+            });
+
+            const setActiveLink = (activeId) => {
+              tocLinks.forEach((link) => {
+                link.classList.toggle('is-active', link.dataset.targetId === activeId);
+              });
+            };
+
+            const updateActiveHeading = () => {
+              const panelTop = contentPanel.getBoundingClientRect().top;
+              let activeId = headingElements[0].id;
+
+              headingElements.forEach((heading) => {
+                const headingTop = heading.getBoundingClientRect().top - panelTop;
+                if (headingTop <= 140) {
+                  activeId = heading.id;
+                }
+              });
+
+              setActiveLink(activeId);
+            };
+
+            contentPanel.addEventListener('scroll', updateActiveHeading, { passive: true });
+            updateActiveHeading();
+
+            contentToc.addEventListener('click', (event) => {
+              const target = event.target;
+              if (!(target instanceof HTMLAnchorElement)) return;
+              const targetId = target.dataset.targetId;
+              if (!targetId) return;
+              const heading = document.getElementById(targetId);
+              if (!heading) return;
+              event.preventDefault();
+              heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
+              history.replaceState(null, '', '#' + targetId);
+              setActiveLink(targetId);
+            });
+
+            contentToc.hidden = false;
+          }
         }
 
         const handleArrowNavigation = (key) => {

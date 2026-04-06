@@ -18,14 +18,19 @@ metadata:
       - TypeScript
       - Python
       - Next.js
+      - NodeJS (Express) + GraphQL
       - PostgreSQL
       - AWS
-      - GraphQL
+      - Terraform
+      - OpenAI, Gemini APIs
     icon: Shapes
 ---
+
+![Borderpass Banner](/imgs/bp-banner.png)
+
 # Overview
 
-Borderpass is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed over several core features and products since joining the team in May 2025.
+[Borderpass](https://www.borderpass.ai/) is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed over several core features and products since joining the team in May 2025.
 
 # My key contributions
 
@@ -44,8 +49,8 @@ Scrapy crawler is hosted on an AWS lambda split into staging and prod environmen
 
 ![Architecture diagram](/imgs/job-search-architecture.png)
 
-1. User triggers run from the app frontend by REST API call to server, which is then queued up for processing by the crawler lambda. The operation is asynchronous so the user is not blocked. Response is polled every second.
-   a. An optional description that the user enters is passed in the request. The selected resume content is also passed.
+1. User triggers run from the app frontend by REST API call to server, which is then queued up for processing by the crawler lambda. The operation is asynchronous so the user is not blocked. Response is polled for every second.
+   An optional description that the user enters is passed in the request. The selected resume content is also passed.
 
 ```json
 {
@@ -109,11 +114,17 @@ Users can also save favorite results and view search history.
 
 # Workflow Automation
 
-An ongoing project I contributed to was a headless browser automation tool built with Python, Puppeteer, and Google Gemini. It mixes traditional browser-based automation with improvisational capabilities of LLMs to perform repetitive online form submissions and reduce manual labor.
+An ongoing project I contributed to was a **headless browser automation tool** built with **Python**, **Puppeteer**, and **Google Gemini**. It mixes traditional browser-based automation with improvisational capabilities of LLMs to perform repetitive online form submissions and reduce manual labor.
+
+![Automation](/imgs/automation-2.png)
 
 The main challenge was balancing several moving pieces. The automation must follow a strict sequence of steps that are logged and reported by the server and integrations such as Slack. It can read and parse emails, upload and download files, and perform complex form submissions in a headless browser.
 
+## Deployment
+
 The automation is deployed on an EC2 instance with a configurable cron schedule to perform daily runs.
+
+## Improvements
 
 I helped improve reliability by resolving bot detection issues, improving memory usage, and managing async workflows to ensure tasks like email verification code retrieval finish before proceeding.
 
@@ -121,6 +132,6 @@ I helped improve reliability by resolving bot detection issues, improving memory
 
 A core architectural problem with the automation was that it was split from the main application codebase. This meant that complex business logic needed to be translated from TypeScript to Python when adding decision flows.
 
-I introduced a REST API interface allowing the automation to communicate with the main API server, which offloaded business logic decisions to the existing backend. This significantly improved maintainability and reduced the risk of business-logic drift.
+![Automation](/imgs/automation-3.png)
 
-![System planning placeholder](/placeholders/placeholder-1.svg)
+A major refactor I did was introducing a **REST API** interface allowing the automation to communicate with the main API server, which offloaded business logic decisions to the existing backend. This significantly improved maintainability and reduced the risk of business-logic drift.
