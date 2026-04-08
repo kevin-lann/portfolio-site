@@ -1,7 +1,7 @@
 ---
-title: Portfolio Console
+title: Course Matrix
 section: projects
-overview: An experimental, terminal-inspired portfolio with markdown-authored stories.
+overview: Agentic timetable builder platform for students
 order: 20
 links:
   - label: Demo
@@ -11,19 +11,24 @@ links:
 metadata:
   - label: Stack
     value:
-      - Astro
+      - NodeJS (Express)
+      - PostgreSQL (Supabase)
+      - Pinecone
+      - Vercel AI SDK
+      - Langchain
+      - OpenAI API
       - React
-      - Tailwind CSS
-      - TypeScript
+      - Tailwind
+      - Microsoft Azure
     icon: Shapes
   - label: Date
-    value: Mar 2026
+    value: Apr 2025
     icon: CalendarRange
   - label: Duration
-    value: 2 weeks
+    value: 2 months
     icon: CalendarRange
   - label: Team
-    value: Solo project
+    value: Thomas Yang, Masahisa Sekita, Austin Xu, Minh Le
     icon: User
   - label: Links
     value:
