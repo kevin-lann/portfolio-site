@@ -1,5 +1,14 @@
-import { ExternalLink } from "lucide-react";
-import { DynamicIcon, iconNames, type IconName } from "lucide-react/dynamic";
+import {
+  CalendarRange,
+  ExternalLink,
+  Link2,
+  MapPin,
+  Shapes,
+  Timer,
+  User,
+  type LucideProps,
+} from "lucide-react";
+import type { ComponentType } from "react";
 
 interface MetadataField {
   label: string;
@@ -13,18 +22,25 @@ interface MetadataPanelCollectionProps {
   metadata: MetadataField[];
 }
 
-const availableIcons = new Set(iconNames);
+const metadataIcons: Record<string, ComponentType<LucideProps>> = {
+  "calendar-range": CalendarRange,
+  link2: Link2,
+  "map-pin": MapPin,
+  shapes: Shapes,
+  timer: Timer,
+  user: User,
+};
 
-const getIconName = (icon?: string): IconName | null => {
+const getIconComponent = (icon?: string): ComponentType<LucideProps> | null => {
   if (!icon) return null;
 
   const normalized = icon
     .trim()
     .replace(/([a-z0-9])([A-Z])/g, "$1-$2")
     .replace(/[\s_]+/g, "-")
-    .toLowerCase() as IconName;
+    .toLowerCase();
 
-  return availableIcons.has(normalized) ? normalized : null;
+  return metadataIcons[normalized] ?? null;
 };
 
 const isLinkValue = (
@@ -59,20 +75,19 @@ export function MetadataPanelCollection({
 
         <dl className="metadata-list">
           {metadata.map((field) => {
-            const iconName = getIconName(field.icon);
+            const IconComponent = getIconComponent(field.icon);
 
             return (
               <div
                 key={field.label}
                 className="metadata-item text-sm flex items-start gap-2.5"
               >
-                {iconName ? (
+                {IconComponent ? (
                   <span
                     className="mt-0.5 inline-flex h-[14px] w-[14px] shrink-0 items-center justify-center"
                     aria-hidden="true"
                   >
-                    <DynamicIcon
-                      name={iconName}
+                    <IconComponent
                       size={14}
                       strokeWidth={1.75}
                       style={{ color: "var(--light)" }}
