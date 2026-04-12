@@ -1,12 +1,11 @@
 import { getCollection, type CollectionEntry } from 'astro:content';
 
-export const sectionOrder = ['experience', 'projects', 'other'] as const;
+export const sectionOrder = ['experience', 'projects'] as const;
 export type SectionKey = (typeof sectionOrder)[number];
 
 export const sectionLabels: Record<SectionKey, string> = {
   experience: 'experience',
   projects: 'projects',
-  other: 'other'
 };
 
 export type PortfolioEntry = CollectionEntry<'portfolio'>;

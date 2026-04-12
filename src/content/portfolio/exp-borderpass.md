@@ -30,14 +30,14 @@ metadata:
 
 # Overview
 
-[Borderpass](https://www.borderpass.ai/) is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed over several core features and products since joining the team in May 2025.
+[Borderpass](https://www.borderpass.ai/) is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed to several core features and products since joining the team in May 2025.
 
 # My key contributions
 
 - Leveraged **AI vision models** such as **Google Gemini** to read and extract information from user documents, constructing a comprehensive overview of applicant information.
 - Developed headless **Puppeteer** automations for performing browser-based tasks such as form submissions, resulting in hundreds of hours saved for the operations team weekly.
-- Delivered an end-to-end **AI Job Search Tool** which produces LLM synthesized filters based off user resumes to perform a web crawl of popular job sites, returning a personalized list of job postings in seconds.
-- Designed, built, and maintained several core **AWS lambda functions** for document processing and integration.
+- Delivered an end-to-end **AI Job Search Tool** that produces LLM-synthesized filters based on user resumes to perform a web crawl of popular job sites, returning a personalized list of job postings in seconds.
+- Designed, built, and maintained several core **AWS Lambda functions** for document processing and integration.
 
 # Personalized Job Search Tool
 
@@ -45,11 +45,11 @@ A major project I led was a personalized job search tool that leverages document
 
 ## Architecture
 
-Scrapy crawler is hosted on an AWS lambda split into staging and prod environments.
+The Scrapy crawler is hosted on an AWS Lambda split into staging and prod environments.
 
 ![Architecture diagram](/imgs/job-search-architecture.png)
 
-1. User triggers run from the app frontend by REST API call to server, which is then queued up for processing by the crawler lambda. The operation is asynchronous so the user is not blocked. Response is polled for every second.
+1. The user triggers a run from the app frontend via a REST API call to the server, which is then queued for processing by the crawler Lambda. The operation is asynchronous, so the user is not blocked. The response is polled every second.
    An optional description that the user enters is passed in the request. The selected resume content is also passed.
 
 ```json
@@ -59,7 +59,7 @@ Scrapy crawler is hosted on an AWS lambda split into staging and prod environmen
 }
 ```
 
-2. Lambda handler receives request and starts by **Generating Filters** using GPT-4o. These are relevant to the user info given from their description and resume.
+2. The Lambda handler receives the request and starts by **Generating Filters** using GPT-4o. These are relevant to the user info given in their description and resume.
 
 ```json
 {
@@ -84,7 +84,7 @@ Scrapy crawler is hosted on an AWS lambda split into staging and prod environmen
 - `fprov=ON` filters by province.
 - `fskl=...` filters by work locations like onsite, remote, hybrid.
 
-4. **View and extract results**: Scraping navigates to the URL generated with filter query params. It parses HTML and finds target postings. For each result, it opens the detail page and extracts the job details card.
+4. **View and extract results**: The scraper navigates to the URL generated with filter query params. It parses HTML and finds target postings. For each result, it opens the detail page and extracts the job details card.
 5. **Follow links**: If the posting is from an external source such as Indeed or LinkedIn, the crawler follows that link and extracts more details.
 6. **Store results**: Each job posting is stored in a normalized format.
 
@@ -104,7 +104,7 @@ Scrapy crawler is hosted on an AWS lambda split into staging and prod environmen
 }
 ```
 
-7. **Filter data**: Feed the results into GPT-4o and return the top K results judged against the user description and resume.
+7. **Filter data**: Feed the results into GPT-4o and return the top K results judged against the user's description and resume.
 8. **Display results**: Results are displayed in the frontend after polling returns complete.
 
 ![Job Search Tool](/imgs/job-search-page-1.png)

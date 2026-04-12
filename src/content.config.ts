@@ -17,7 +17,18 @@ const portfolio = defineCollection({
     metadata: z.array(
       z.object({
         label: z.string(),
-        value: z.union([z.string(), z.array(z.string())]),
+        value: z.union([
+          z.string(),
+          z.array(
+            z.union([
+              z.string(),
+              z.object({
+                text: z.string(),
+                url: z.string().url()
+              })
+            ])
+          )
+        ]),
         icon: z.string().optional()
       })
     ).default([])
