@@ -1,6 +1,7 @@
 ---
 import '../styles/global.css';
 import { MetadataPanelCollection } from '../components/portfolio/MetadataPanelCollection';
+import { FileText, Mail } from 'lucide-react';
 
 import {
   sectionLabels,
@@ -14,6 +15,14 @@ import {
 interface ContentLink {
   label: string;
   href: string;
+}
+
+interface SocialLink {
+  label: string;
+  href: string;
+  icon: 'linkedin' | 'github' | 'x' | 'resume' | 'email';
+  external?: boolean;
+  download?: boolean;
 }
 
 interface Props {
@@ -36,10 +45,12 @@ const {
   isHome = false
 } = Astro.props;
 
-const socials = [
-  { label: 'linkedin', href: 'https://www.linkedin.com/' },
-  { label: 'github', href: 'https://github.com/' },
-  { label: 'twitter', href: 'https://twitter.com/' }
+const socials: SocialLink[] = [
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/in/kevin-lan-/', icon: 'linkedin', external: true },
+  { label: 'X', href: 'https://x.com/kevinlann_', icon: 'x', external: true },
+  { label: 'GitHub', href: 'https://github.com/kevin-lann', icon: 'github', external: true },
+  { label: 'Download Resume', href: '/documents/Kevin Lan Resume.pdf', icon: 'resume', download: true },
+  { label: 'Email', href: 'mailto:kevinlan416@gmail.com', icon: 'email' }
 ];
 
 const isActiveEntry = (entry: PortfolioEntry) =>
@@ -70,12 +81,41 @@ const isActiveEntry = (entry: PortfolioEntry) =>
                 <h1 class="logo fancy-font pl-4">Kevin Lan</h1>
               </a>
               <p class="intro-copy text-sm">
-                Software engineer based in Toronto delivering high-quality solutions. University of Toronto
-                Scarborough 4th year CS student (Entrepreneurship Stream)
+                Software engineer based in Toronto delivering high-quality solutions. University of Toronto 4th year CS student.
               </p>
-              <div class="contact-section">
-                <p>Email: kevinlan416@gmail.com</p>
-                <a class='underline text-link text-[var(--muted)]' href='/documents/Kevin Lan Resume.pdf' download target="_blank" rel="noopener noreferrer" >Download Resume</a>
+              <div class="social-group">
+                <div class="social-icons">
+                  {socials.map((social) => (
+                    <a
+                      href={social.href}
+                      class="social-icon-link"
+                      target={social.external ? '_blank' : undefined}
+                      rel={social.external ? 'noopener noreferrer' : undefined}
+                      download={social.download ? true : undefined}
+                      aria-label={social.label}
+                      title={social.label}
+                    >
+                      {social.icon === 'linkedin' ? (
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="social-brand-icon">
+                          <path d="M4.983 3.5C4.983 4.604 4.11 5.5 3.03 5.5 1.95 5.5 1.078 4.604 1.078 3.5 1.078 2.397 1.95 1.5 3.03 1.5c1.08 0 1.953.897 1.953 2Zm.017 4.5H1.062V22H5V8Zm7.982 0H9.06V22h3.922v-7.35c0-1.936.367-3.81 2.766-3.81 2.366 0 2.4 2.214 2.4 3.933V22H22V13.79c0-4.033-.87-7.13-5.58-7.13-2.264 0-3.78 1.244-4.4 2.423h-.04V8Z"></path>
+                        </svg>
+                      ) : social.icon === 'x' ? (
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="social-brand-icon">
+                          <path d="M18.901 1.153h3.68l-8.04 9.19L24 22.847h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932 6.064-6.933Zm-1.29 19.495h2.039L6.486 3.24H4.298Z"></path>
+                        </svg>
+                      ) : social.icon === 'github' ? (
+                        <svg viewBox="0 0 24 24" aria-hidden="true" class="social-brand-icon">
+                          <path d="M12 0C5.37 0 0 5.373 0 12c0 5.302 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.016-2.042-3.338.724-4.042-1.61-4.042-1.61-.547-1.387-1.335-1.758-1.335-1.758-1.09-.744.082-.729.082-.729 1.205.085 1.84 1.237 1.84 1.237 1.07 1.834 2.807 1.304 3.492.996.108-.775.418-1.305.76-1.605-2.665-.303-5.466-1.334-5.466-5.93 0-1.31.467-2.38 1.236-3.22-.124-.303-.536-1.524.116-3.176 0 0 1.01-.323 3.308 1.23a11.53 11.53 0 0 1 3.012-.405c1.022.005 2.052.138 3.012.405 2.298-1.553 3.307-1.23 3.307-1.23.653 1.653.241 2.874.118 3.176.77.84 1.235 1.91 1.235 3.22 0 4.61-2.804 5.624-5.477 5.921.43.372.823 1.102.823 2.222 0 1.606-.015 2.903-.015 3.298 0 .322.216.694.825.576C20.565 21.796 24 17.3 24 12c0-6.627-5.373-12-12-12Z"></path>
+                        </svg>
+                      ) : social.icon === 'resume' ? (
+                        <FileText size={16} strokeWidth={1.9} aria-hidden="true" className="social-lucide-icon" />
+                      ) : (
+                        <Mail size={16} strokeWidth={1.9} aria-hidden="true" className="social-lucide-icon" />
+                      )}
+                      <span class="sr-only">{social.label}</span>
+                    </a>
+                  ))}
+                </div>
               </div>
               <p class="shortcut-hints text-xs" aria-label="Keyboard shortcuts">
                 <span><kbd>L</kbd> light mode</span>
@@ -87,7 +127,9 @@ const isActiveEntry = (entry: PortfolioEntry) =>
             </div>
 
             <nav class="nav-group" aria-label="Main sections">
+              <hr class="divider-line"/>
               <span class="group-label">sections</span>
+
               <a
                 href="/"
                 data-nav-target="home"
@@ -120,15 +162,6 @@ const isActiveEntry = (entry: PortfolioEntry) =>
                 </div>
               ))}
             </nav>
-
-            <div class="social-group">
-              <span class="group-label">socials</span>
-              {socials.map((social) => (
-                <a href={social.href} target="_blank" rel="noreferrer" class="text-link">
-                  {social.label}
-                </a>
-              ))}
-            </div>
           </aside>
         </div>
 

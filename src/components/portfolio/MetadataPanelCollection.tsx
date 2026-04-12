@@ -82,7 +82,7 @@ export function MetadataPanelCollection({
 
                 <div>
                   <dt className="metadata-label-light">{field.label}</dt>
-                  <dd className={`${field.label == "Links" ? "flex gap-1.5" : "flex flex-col"}`}>
+                  <dd className={`${field.label == "Links" ? "flex gap-1.5" : "flex flex-col gap-1"}`}>
                     {Array.isArray(field.value)
                       ? field.value.map((line, index) =>
                           isLinkValue(line) ? (
@@ -91,7 +91,7 @@ export function MetadataPanelCollection({
                               href={line.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="inline-flex w-fit items-center gap-2 rounded-md border border-(--line) px-2.5 py-1.5 transition-colors hover:bg-(--line)"
+                              className="metadata-link-button inline-flex w-fit items-center gap-2 rounded-md border px-2.5 py-1.5"
                             >
                               {isGithubLink(line.text, line.url) ? (
                                 <svg
@@ -109,7 +109,7 @@ export function MetadataPanelCollection({
                                 <ExternalLink
                                   size={14}
                                   strokeWidth={2}
-                                  style={{ color: "var(--light)" }}
+                                  style={{ color: "currentColor" }}
                                   aria-hidden="true"
                                 />
                               )}
