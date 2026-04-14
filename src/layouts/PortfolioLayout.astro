@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import { MetadataPanelCollection } from '../components/portfolio/MetadataPanelCollection';
 import { FileText, Mail } from 'lucide-react';
+import Analytics from '@vercel/analytics/astro';
 
 import {
   sectionLabels,
@@ -58,6 +59,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
 ---
 
 <html lang="en">
+  <Analytics />
   <head>
     <meta charset="utf-8" />
     <link rel="icon" href="/favicon.ico" />
@@ -122,7 +124,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
                 <span><kbd>D</kbd> dark mode</span>
                 <span><kbd>H</kbd> hide/show sidebars</span>
                 <span><kbd>F</kbd> fullscreen</span>
-                <span><kbd>S</kbd> summer mode</span>
+                <span><kbd>S</kbd> summer mode 🏝️</span>
               </p>
             </div>
 
