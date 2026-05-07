@@ -82,7 +82,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
                 <img src="/imgs/logo.png" class="logo-img" />
                 <h1 class="logo fancy-font pl-4">Kevin Lan</h1>
               </a>
-              <p class="intro-copy text-sm">
+              <p class="intro-copy text-xs">
                 Software engineer based in Toronto delivering high-quality solutions. University of Toronto 4th year CS student.
               </p>
               <div class="social-group">
@@ -128,9 +128,9 @@ const isActiveEntry = (entry: PortfolioEntry) =>
               </p>
             </div>
 
-            <nav class="nav-group" aria-label="Main sections">
+            <nav class="nav-group text-xs" aria-label="Main sections">
               <hr class="divider-line"/>
-              <span class="group-label">sections</span>
+              <span class="group-label text-xs">sections</span>
 
               <a
                 href="/"
@@ -153,7 +153,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
                           data-entry-section={entry.data.section}
                           class:list={["subnav-link", { active: isActiveEntry(entry) }]}
                         >
-                          <div class="flex gap-2 text-left">
+                          <div class="flex gap-2 text-left text-xs">
                             <span class="text-xs">∟</span>
                             {entry.data.title}
                           </div>

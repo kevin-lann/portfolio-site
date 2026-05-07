@@ -68,7 +68,7 @@ export function MetadataPanelCollection({
       aria-label="Entry metadata"
     >
       <article className="pb-2">
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 text-xs">
           <h2 className="text-2xl text-(--light) fancy-font">{title}</h2>
           <p>{overview}</p>
         </div>
@@ -80,7 +80,7 @@ export function MetadataPanelCollection({
             return (
               <div
                 key={field.label}
-                className="metadata-item text-sm flex items-start gap-2.5"
+                className="metadata-item text-xs flex items-start gap-2.5"
               >
                 {IconComponent ? (
                   <span
@@ -96,7 +96,7 @@ export function MetadataPanelCollection({
                 ) : null}
 
                 <div>
-                  <dt className="metadata-label-light">{field.label}</dt>
+                  <dt className="metadata-label-light text-xs">{field.label}</dt>
                   <dd className={`${field.label == "Links" ? "flex gap-1.5" : "flex flex-col gap-1"}`}>
                     {Array.isArray(field.value)
                       ? field.value.map((line, index) =>
@@ -131,7 +131,7 @@ export function MetadataPanelCollection({
                               {line.text}
                             </a>
                           ) : (
-                            <span key={`${line}-${index}`}>{line}</span>
+                            <span key={`${line}-${index}`} className="text-xs">{line}</span>
                           )
                         )
                       : field.value}
