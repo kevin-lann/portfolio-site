@@ -30,22 +30,22 @@ metadata:
 
 # Overview
 
-[Borderpass](https://www.borderpass.ai/) is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I contributed to several core features and products since joining the team in May 2025.
+[Borderpass](https://www.borderpass.ai/) is a legaltech startup that streamlines immigration pathways for individuals coming to Canada. I built out a lot of major AI integrations, document processing pipelines, and workflow automations that signifigantly sped up application processes for our legal team as well as 40,000+ customers.
 
 # My key contributions
 
-- Leveraged **AI vision models** such as **Google Gemini** to read and extract information from user documents, constructing a comprehensive overview of applicant information.
-- Developed headless **Puppeteer** automations for performing browser-based tasks such as form submissions, resulting in hundreds of hours saved for the operations team weekly.
-- Delivered an end-to-end **AI Job Search Tool** that produces LLM-synthesized filters based on user resumes to perform a web crawl of popular job sites, returning a personalized list of job postings in seconds.
-- Designed, built, and maintained several core **AWS Lambda functions** for document processing and integration.
+- Delivered an end-to-end **AI Job Search Tool** that produces LLM-synthesized filters based on user resumes, performs a web crawl of popular job sites, and returns a personalized list of job postings in seconds.
+- Harnessed cutting-edge **AI vision models** like **Google Gemini** to intelligently extract and validate data from user documents, assembling a real-time profile of each applicant.
+- Developed headless **Puppeteer** automations for performing browser-based tasks such as form submissions, resulting in **hundreds** of hours saved for the operations team weekly.
+- Designed, built, and maintained several core **AWS Lambda functions** for document processing and synthesis.
 
-# Personalized Job Search Tool
+# Personalized AI Job Search Tool
 
-A major project I led was a personalized job search tool that leverages document context (stored as vector embeddings) to generate personalized search filters for a given job seeker. It then uses Scrapy (a Python-based web crawler) to crawl popular job sites, returning a custom list of job postings in seconds.
+I led the development of an AI job search tool which was used by thousands of users on the platform and helped incoming workers land jobs relevant to their field. The system leverages document context (stored as vector embeddings) to generate personalized search filters for a given job seeker. It then uses Scrapy (a Python-based web crawler) to crawl popular job sites, returning a custom list of job postings in seconds.
 
 ## Architecture
 
-The Scrapy crawler is hosted on an AWS Lambda split into staging and prod environments.
+The crawler is hosted on an AWS Lambda split into staging and prod environments.
 
 ![Architecture diagram](/imgs/job-search-architecture.png)
 

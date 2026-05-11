@@ -30,11 +30,11 @@ metadata:
 
 # Overview
 
-I worked in a small project team at FPT Software to complete a visa-management platform for a client. I was the core frontend developer and led many of the initial design decisions. There were also several significant backend contributions I made alongside a senior Java Spring Boot developer.
+Worked as a full stack developer on a small project team at FPT Software to complete a visa-management platform from start to finish. I built out the clientside frontend from scratch and developed core features using React, Java Springboot, NodeJS, and PostgreSQL.
 
 # My key contributions
 Here are some of the things I helped deliver over the 5 month span:
-- Built out the application frontend using Redux, Axios, Vite, and Ant Design. Converted over 200 Figma mockups into pixel-perfect interfaces
+- Built out the application frontend using Redux, Axios, Vite, and Ant Design. Converted over 200 Figma mockups into professional grade interfaces
 - Streamlined frontend development by designing a custom UI component library from scratch using React & CSS Modules
 - Introduced a secure **Node.js proxy server** with encryption, JWT management, and session caching, which strengthened security by preventing client applications from interacting with the core API server
 - Automated a key client workflow by developing a **PDF parsing/autofilling** tool using Apache PDFBox capable of extracting data from both raw and XFA-based PDFs. Integrated with an email webhook, handling **1,000+ forms daily**

@@ -41,7 +41,7 @@ Opentrade is a social network for traders where you can share watchlists and por
 
 # Full price charts
 
-Charts are built on top of <a href="https://echartsforreact.com/examples/" target="_blank" rel="noopener noreferrer">React Echarts</a> and render tuples of (open, close, high, low) over the time period. There are view options for week, month, quarter, and year.
+Charts are built on top of <a href="https://echartsforreact.com/examples/" target="_blank" rel="noopener noreferrer">React Echarts</a> and render tuples of (open, high, low, close) over the time period. There are view options for week, month, quarter, and year.
 
 ![Opentrade chart](/imgs/stock-social-chart.png)
 
