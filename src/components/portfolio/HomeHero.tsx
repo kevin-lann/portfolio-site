@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react';
 import { Video2Ascii } from 'video2ascii';
 
-type ColorMode = 'dark' | 'light' | 'summer';
+type ColorMode = 'dark' | 'light' | 'summer' | 'night';
 
 const colorModeHighlight = {
   dark: 0,
   light: 100,
-  summer: 100
+  summer: 100,
+  night: 0
 };
 
 const isColorMode = (value: string | null | undefined): value is ColorMode =>
-  value === 'dark' || value === 'light' || value === 'summer';
+  value === 'dark' || value === 'light' || value === 'summer' || value === 'night';
 
 export function HomeHero({ colorMode }: { colorMode: ColorMode }) {
   const [activeColorMode, setActiveColorMode] = useState<ColorMode>(colorMode);

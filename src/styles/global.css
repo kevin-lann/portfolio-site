@@ -59,6 +59,25 @@
   color-scheme: light;
 }
 
+:root[data-color-mode="night"] {
+  --bg: #05070d;
+  --panel: #080b12;
+  --panel-2: #0b101a;
+  --light: #edf3ff;
+  --text: #b8c2d8;
+  --muted: #8d99af;
+  --line: #1d2739;
+  --lime: #8bd8ff;
+  --code-bg: #0b1018;
+  --code-inline-bg: #111927;
+  --code-text: #dce7ff;
+  --code-keyword: #9cc8ff;
+  --code-string: #b6f0d1;
+  --code-comment: #778399;
+  --code-variable: #f3d48b;
+  color-scheme: dark;
+}
+
 * {
   box-sizing: border-box;
   -ms-overflow-style: none;
@@ -129,6 +148,57 @@ body {
       rgba(239, 235, 227, 0.85)
     ),
     url("/background/beach.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root[data-color-mode="night"] body {
+  background-color: #05070d;
+  background-image: linear-gradient(
+      rgba(5, 7, 13, 0.78),
+      rgba(5, 7, 13, 0.78)
+    ),
+    url("/background/night.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root[data-color-mode="night"] .portfolio-root {
+  background-color: #05070d;
+  background-image: linear-gradient(
+      rgba(5, 7, 13, 0.78),
+      rgba(5, 7, 13, 0.78)
+    ),
+    url("/background/night.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root[data-color-mode="night"] .left-panel,
+:root[data-color-mode="night"] .content-panel {
+  background-image: linear-gradient(
+      rgba(8, 11, 18, 0.86),
+      rgba(8, 11, 18, 0.86)
+    ),
+    url("/background/night.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+:root[data-color-mode="night"] .metadata-panel {
+  background-image: linear-gradient(
+      rgba(11, 16, 26, 0.86),
+      rgba(11, 16, 26, 0.86)
+    ),
+    url("/background/night.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
@@ -702,7 +772,9 @@ body {
 }
 
 :root[data-color-mode="dark"] .content-markdown pre.astro-code,
-:root[data-color-mode="dark"] .content-markdown pre.astro-code span {
+:root[data-color-mode="dark"] .content-markdown pre.astro-code span,
+:root[data-color-mode="night"] .content-markdown pre.astro-code,
+:root[data-color-mode="night"] .content-markdown pre.astro-code span {
   color: var(--shiki-dark, var(--code-text)) !important;
   background-color: var(--shiki-dark-bg, var(--code-bg)) !important;
 }

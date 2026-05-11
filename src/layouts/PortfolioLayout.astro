@@ -3,6 +3,7 @@ import '../styles/global.css';
 import { MetadataPanelCollection } from '../components/portfolio/MetadataPanelCollection';
 import { FileText, Mail } from 'lucide-react';
 import Analytics from '@vercel/analytics/astro';
+import { ClientRouter } from 'astro:transitions';
 
 import {
   sectionLabels,
@@ -66,6 +67,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
+    <ClientRouter />
   </head>
   <body>
     <main class="portfolio-root" data-color-mode="dark">
@@ -125,6 +127,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
                 <span><kbd>H</kbd> hide/show sidebars</span>
                 <span><kbd>F</kbd> fullscreen</span>
                 <span><kbd>S</kbd> summer mode 🏝️</span>
+                <span><kbd>N</kbd> night mode 🌘</span>
               </p>
             </div>
 
@@ -225,12 +228,23 @@ const isActiveEntry = (entry: PortfolioEntry) =>
       <div class="circle" aria-hidden="true"></div>
     </main>
 
-    <script is:inline>
+    <script is:inline data-astro-rerun>
       (() => {
+        window.__portfolioPageCleanup?.();
+
         const LEFT_MIN = 0;
         const MIDDLE_MIN = 0;
         const RIGHT_MIN = 50;
         const COLOR_MODE_STORAGE_KEY = 'portfolio-color-mode';
+        const AMBIENCE_STORAGE_KEY = 'portfolio-ambience-enabled';
+
+        const pageController = new AbortController();
+        window.__portfolioPageCleanup = () => pageController.abort();
+
+        const withSignal = (options = {}) => ({
+          ...options,
+          signal: pageController.signal
+        });
 
         const root = document.documentElement;
         const leftColumn = document.querySelector('[data-column="left"]');
@@ -251,20 +265,45 @@ const isActiveEntry = (entry: PortfolioEntry) =>
         let middleWidth = Number(middleColumn?.getAttribute('data-width') || 20);
         let areSidebarsCollapsed = false;
 
-        const validColorModes = new Set(['dark', 'light', 'summer']);
+        const validColorModes = new Set(['dark', 'light', 'summer', 'night']);
         const storedMode = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY) || 'dark';
         let colorMode = validColorModes.has(storedMode) ? storedMode : 'dark';
 
-        const summerAudio = new Audio('/sounds/breach-ambience.mp3');
-        summerAudio.loop = true;
-        summerAudio.preload = 'auto';
-        summerAudio.volume = 0.35;
+        document.addEventListener('astro:before-swap', (event) => {
+          const nextMode = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY) || colorMode;
+          if (!validColorModes.has(nextMode)) return;
+          event.newDocument.documentElement.setAttribute('data-color-mode', nextMode);
+        }, withSignal());
 
-        const setColorMode = (mode) => {
+        window.__portfolioAmbience ??= {
+          summer: new Audio('/sounds/breach-ambience.mp3'),
+          night: new Audio('/sounds/night-ambience.mp3')
+        };
+
+        const ambience = window.__portfolioAmbience;
+        ambience.summer.loop = true;
+        ambience.summer.preload = 'auto';
+        ambience.summer.volume = 0.25;
+        ambience.night.loop = true;
+        ambience.night.preload = 'auto';
+        ambience.night.volume = 0.35;
+
+        const stopAmbience = (audio) => {
+          audio.pause();
+          audio.currentTime = 0;
+        };
+
+        const setColorMode = (mode, options = {}) => {
           if (!validColorModes.has(mode)) return;
           colorMode = mode;
           root.setAttribute('data-color-mode', colorMode);
           window.localStorage.setItem(COLOR_MODE_STORAGE_KEY, colorMode);
+          if ((colorMode === 'summer' || colorMode === 'night') && options.playAmbience) {
+            window.sessionStorage.setItem(AMBIENCE_STORAGE_KEY, 'true');
+          } else if (colorMode !== 'summer' && colorMode !== 'night') {
+            window.sessionStorage.removeItem(AMBIENCE_STORAGE_KEY);
+          }
+
           window.dispatchEvent(
             new CustomEvent('portfolio-color-mode-change', {
               detail: { colorMode }
@@ -272,10 +311,19 @@ const isActiveEntry = (entry: PortfolioEntry) =>
           );
 
           if (colorMode === 'summer') {
-            void summerAudio.play().catch(() => undefined);
+            if (options.playAmbience) {
+              void ambience.summer.play().catch(() => undefined);
+            }
           } else {
-            summerAudio.pause();
-            summerAudio.currentTime = 0;
+            stopAmbience(ambience.summer);
+          }
+
+          if (colorMode === 'night') {
+            if (options.playAmbience) {
+              void ambience.night.play().catch(() => undefined);
+            }
+          } else {
+            stopAmbience(ambience.night);
           }
         };
 
@@ -302,7 +350,9 @@ const isActiveEntry = (entry: PortfolioEntry) =>
           setToggleLabel();
         };
 
-        setColorMode(colorMode);
+        setColorMode(colorMode, {
+          playAmbience: window.sessionStorage.getItem(AMBIENCE_STORAGE_KEY) === 'true'
+        });
         applyLayout();
 
         const clamp = (value, min, max) => Math.min(Math.max(value, min), max);
@@ -339,10 +389,10 @@ const isActiveEntry = (entry: PortfolioEntry) =>
 
         const attachDragListeners = () => {
           document.body.classList.add('is-dragging-columns');
-          window.addEventListener('mousemove', onMouseMove);
-          window.addEventListener('mouseup', endDrag, { once: true });
-          window.addEventListener('touchmove', onTouchMove);
-          window.addEventListener('touchend', endDrag, { once: true });
+          window.addEventListener('mousemove', onMouseMove, withSignal());
+          window.addEventListener('mouseup', endDrag, withSignal({ once: true }));
+          window.addEventListener('touchmove', onTouchMove, withSignal());
+          window.addEventListener('touchend', endDrag, withSignal({ once: true }));
         };
 
         const beginDrag = (handle, clientX) => {
@@ -357,24 +407,24 @@ const isActiveEntry = (entry: PortfolioEntry) =>
           attachDragListeners();
         };
 
-        leftHandle.addEventListener('mousedown', (event) => beginDrag('left', event.clientX));
+        leftHandle.addEventListener('mousedown', (event) => beginDrag('left', event.clientX), withSignal());
         leftHandle.addEventListener('touchstart', (event) => {
           if (!event.touches[0]) return;
           beginDrag('left', event.touches[0].clientX);
-        });
+        }, withSignal());
 
         if (hasMiddle && middleHandle) {
-          middleHandle.addEventListener('mousedown', (event) => beginDrag('middle', event.clientX));
+          middleHandle.addEventListener('mousedown', (event) => beginDrag('middle', event.clientX), withSignal());
           middleHandle.addEventListener('touchstart', (event) => {
             if (!event.touches[0]) return;
             beginDrag('middle', event.touches[0].clientX);
-          });
+          }, withSignal());
         }
 
         collapseToggle.addEventListener('click', () => {
           areSidebarsCollapsed = !areSidebarsCollapsed;
           applyLayout();
-        });
+        }, withSignal());
 
         let lightbox = null;
         const closeLightbox = () => {
@@ -400,14 +450,14 @@ const isActiveEntry = (entry: PortfolioEntry) =>
             image.className = 'image-lightbox-image';
             image.src = target.src;
             image.alt = target.alt || '';
-            image.addEventListener('click', (innerEvent) => innerEvent.stopPropagation());
+            image.addEventListener('click', (innerEvent) => innerEvent.stopPropagation(), withSignal());
 
             overlay.appendChild(image);
-            overlay.addEventListener('click', closeLightbox);
+            overlay.addEventListener('click', closeLightbox, withSignal());
             document.body.appendChild(overlay);
             document.body.style.overflow = 'hidden';
             lightbox = overlay;
-          });
+          }, withSignal());
         }
 
         const slugify = (text) =>
@@ -484,7 +534,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
               setActiveLink(activeId);
             };
 
-            contentPanel.addEventListener('scroll', updateActiveHeading, { passive: true });
+            contentPanel.addEventListener('scroll', updateActiveHeading, withSignal({ passive: true }));
             updateActiveHeading();
 
             contentToc.addEventListener('click', (event) => {
@@ -498,7 +548,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
               heading.scrollIntoView({ behavior: 'smooth', block: 'start' });
               history.replaceState(null, '', '#' + targetId);
               setActiveLink(targetId);
-            });
+            }, withSignal());
 
             contentToc.hidden = false;
           }
@@ -526,7 +576,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
           const nextEntry = selectableEntries[nextIndex];
 
           if (nextEntry) {
-            window.location.assign(nextEntry.href);
+            nextEntry.click();
           }
         };
 
@@ -564,7 +614,12 @@ const isActiveEntry = (entry: PortfolioEntry) =>
           }
 
           if (key === 's') {
-            setColorMode('summer');
+            setColorMode('summer', { playAmbience: true });
+            return;
+          }
+
+          if (key === 'n') {
+            setColorMode('night', { playAmbience: true });
             return;
           }
 
@@ -578,7 +633,7 @@ const isActiveEntry = (entry: PortfolioEntry) =>
             event.preventDefault();
             handleArrowNavigation(key);
           }
-        });
+        }, withSignal());
 
         if (circleElement instanceof HTMLDivElement) {
           const mouse = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
@@ -627,13 +682,16 @@ const isActiveEntry = (entry: PortfolioEntry) =>
             frameId = window.requestAnimationFrame(tick);
           };
 
-          window.addEventListener('mousemove', handleMouseMove);
+          window.addEventListener('mousemove', handleMouseMove, withSignal());
           frameId = window.requestAnimationFrame(tick);
 
-          window.addEventListener('beforeunload', () => {
+          const stopCursorAnimation = () => {
             window.cancelAnimationFrame(frameId);
             window.removeEventListener('mousemove', handleMouseMove);
-          });
+          };
+
+          pageController.signal.addEventListener('abort', stopCursorAnimation, { once: true });
+          window.addEventListener('beforeunload', stopCursorAnimation, withSignal({ once: true }));
         }
       })();
     </script>
