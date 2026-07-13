@@ -2,6 +2,7 @@
 title: Course Matrix
 section: projects
 overview: Agentic timetable builder platform for students
+banner: /imgs/course-matrix-banner.png
 order: 20
 links:
   - label: GitHub
@@ -34,7 +35,6 @@ metadata:
         url: https://github.com/UTSC-CSCC01-Software-Engineering-I/Course-Matrix
     icon: Link2
 ---
-![course matrix banner](/imgs/course-matrix-banner.png)
 # Overview
 
 Course Matrix is an <u>intelligent course timetable builder</u> that generates an optimal timetable for students based on a specific set of time/day restrictions. It also exposes an <u>AI agent</u> that easily translates complex requirements into personalized timetables.

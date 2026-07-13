@@ -2,6 +2,7 @@
 title: Opentrade
 section: projects
 overview: A social network for traders
+banner: /imgs/stock-social-portfolio.png
 order: 30
 links:
   - label: GitHub
@@ -36,8 +37,6 @@ metadata:
 # Overview
 
 Opentrade is a social network for traders where you can share watchlists and portfolios, start conversations, visualize S&P 500 stock charts, and run a basic price forecast using <a href="https://pypi.org/project/prophet/" target="_blank" rel="noopener noreferrer">Prophet</a>. This project serves as a proof of concept and does not actually maintain real portfolios or handle real transactions.
-
-![Opentrade portfolio](/imgs/stock-social-portfolio.png)
 
 # Full price charts
 

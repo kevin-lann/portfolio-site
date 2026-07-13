@@ -1,19 +1,20 @@
 ---
-import PortfolioLayout from '../layouts/PortfolioLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/portfolio/SiteHeader.astro';
+import EntryGrid from '../components/portfolio/EntryGrid.astro';
 import { HomeHero } from '../components/portfolio/HomeHero';
-import { getEntriesBySection } from '../lib/portfolio';
+import { getEntriesBySection, sectionLabels } from '../lib/portfolio';
 
 const entriesBySection = await getEntriesBySection();
 ---
 
-<PortfolioLayout
-  pageTitle="Kevin Lan | Portfolio"
-  entriesBySection={entriesBySection}
-  isHome={true}
-  contentLinks={[]}
->
-  <HomeHero client:load colorMode="dark" />
-  <h1>Welcome</h1>
-  <p>Use the left sidebar to browse experience, projects, and other work.</p>
-  <p>Use arrow keys to move through experience and project entries.</p>
-</PortfolioLayout>
+<BaseLayout pageTitle="Kevin Lan | Portfolio">
+  <SiteHeader />
+
+  <div class="home-hero">
+    <HomeHero client:load colorMode="dark" />
+  </div>
+
+  <EntryGrid label={sectionLabels.experience} entries={entriesBySection.experience} />
+  <EntryGrid label={sectionLabels.projects} entries={entriesBySection.projects} />
+</BaseLayout>

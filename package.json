@@ -15,6 +15,7 @@
     "@astrojs/react": "^5.0.2",
     "@fontsource/fragment-mono": "^5.2.8",
     "@fontsource/newsreader": "^5.2.10",
+    "@fontsource/open-runde": "^5.2.1",
     "@tailwindcss/vite": "^4.2.2",
     "@vercel/analytics": "^2.0.1",
     "astro": "^6.1.2",

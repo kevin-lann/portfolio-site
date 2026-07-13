@@ -2,6 +2,7 @@
 title: Playlist Transfer
 section: projects
 overview: Bidirectional YT Music to Spotify playlist transfer tool
+banner: /imgs/playlist_transfer.png
 order: 50
 links:
   - label: GitHub
@@ -29,8 +30,6 @@ metadata:
         url: https://github.com/kevin-lann/PlaylistTransfer
     icon: Link2
 ---
-
-![Playlist Transfer](/imgs/playlist_transfer.png)
 
 # Overview
 Quick cmd line tool I made to transfer over Youtube Music Playlists to Spotify and vice cersa. Uses YT Music APi and Spotipy (unofficial Spotify API). Maps songs from one platform to another by performing a search on the song name + artist name. The top result is used if similar enough.

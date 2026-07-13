@@ -2,6 +2,7 @@
 title: Knockouts
 section: projects
 overview: Realtime multiplayer trivia game
+banner: /imgs/knockouts-banne.png
 order: 40
 links:
   - label: Demo
@@ -36,8 +37,6 @@ metadata:
         url: https://github.com/kevin-lann/knockouts
     icon: Link2
 ---
-
-![Knockouts banner](/imgs/knockouts-banne.png)
 
 # Overview
 Knockouts is a real-time multiplayer game I built with the <a href="https://www.partykit.io/" target="_blank" rel="noopener noreferrer">PartyKit framework</a> (Cloudflare Workers + Durable Objects), NextJS, Vercel, and Supabase. My goal with this project was to build a dynamically scalable architecture that spins up new rooms as players create them and to make the game as performant as possible.

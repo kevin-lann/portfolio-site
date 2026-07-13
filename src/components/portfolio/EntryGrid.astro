@@ -1,0 +1,31 @@
+---
+import { toEntryHref, type PortfolioEntry } from '../../lib/portfolio';
+
+interface Props {
+  label: string;
+  entries: PortfolioEntry[];
+}
+
+const { label, entries } = Astro.props;
+---
+
+<section class="entry-section" aria-label={label}>
+  <p class="section-label">{label}</p>
+  <div class="card-grid">
+    {entries.map((entry) => (
+      <a
+        href={toEntryHref(entry)}
+        class="project-card"
+        data-entry-section={entry.data.section}
+      >
+        <div class="project-card-media">
+          <img src={entry.data.banner} alt="" loading="lazy" />
+        </div>
+        <div class="project-card-body">
+          <h3 class="project-card-title">{entry.data.title}</h3>
+          <p class="project-card-subtitle">{entry.data.overview}</p>
+        </div>
+      </a>
+    ))}
+  </div>
+</section>

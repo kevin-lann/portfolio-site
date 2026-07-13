@@ -1,0 +1,45 @@
+---
+import { MetadataGrid } from './MetadataGrid';
+import type { PortfolioEntry } from '../../lib/portfolio';
+
+interface Props {
+  entry: PortfolioEntry;
+}
+
+const { entry } = Astro.props;
+const { title, banner, metadata, links } = entry.data;
+---
+
+<a href="/" class="back-link" data-nav-target="home">
+  <span aria-hidden="true">←</span> back
+</a>
+
+<article class="entry-article">
+  <header class="entry-hero">
+    <img src={banner} alt="" class="entry-banner" />
+    <h1 class="entry-title fancy-font py-4">{title}</h1>
+
+    {links.length > 0 ? (
+      <div class="entry-links">
+        {links.map((link) => (
+          <a href={link.href} target="_blank" rel="noopener noreferrer" class="entry-link-button">
+            {link.label}
+          </a>
+        ))}
+      </div>
+    ) : null}
+  </header>
+
+  <MetadataGrid metadata={metadata} />
+
+  <nav class="content-toc" data-content-toc aria-label="Table of contents" hidden>
+    <div class="content-toc-inner">
+      <p class="content-toc-title">on this page</p>
+      <ol class="content-toc-list" data-content-toc-list></ol>
+    </div>
+  </nav>
+
+  <div class="content-markdown" data-content-markdown>
+    <slot />
+  </div>
+</article>

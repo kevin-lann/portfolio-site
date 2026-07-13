@@ -2,6 +2,7 @@
 title: Software Engineer, Borderpass (2025-26)
 section: experience
 overview: Built AI & automation tools for legaltech workflows.
+banner: /imgs/bp-banner.png
 order: 10
 links:
   - label: Site
@@ -25,8 +26,6 @@ metadata:
       - OpenAI, Gemini APIs
     icon: Shapes
 ---
-
-![Borderpass Banner](/imgs/bp-banner.png)
 
 # Overview
 

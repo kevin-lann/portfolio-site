@@ -1,0 +1,30 @@
+---
+const shortcuts: Array<{ keys: string[]; label: string }> = [
+  { keys: ['L'], label: 'light mode' },
+  { keys: ['D'], label: 'dark mode' },
+  { keys: ['N'], label: 'night mode 🌘' },
+  { keys: ['S'], label: 'summer mode 🏝️' },
+  { keys: ['F'], label: 'fullscreen' },
+  { keys: ['↑', '↓'], label: 'browse entries' }
+];
+---
+
+<div class="keybinds" data-keybinds>
+  <button type="button" class="keybinds-trigger" aria-label="Keybinds">
+    <span class="keybinds-trigger-icon" aria-hidden="true">⌘</span>
+    <span>Keybinds</span>
+  </button>
+  <div class="keybinds-panel" role="tooltip">
+    <p class="keybinds-title">Keybinds</p>
+    <dl class="keybinds-list">
+      {shortcuts.map((shortcut) => (
+        <div class="keybinds-row">
+          <dt>
+            {shortcut.keys.map((key) => <kbd>{key}</kbd>)}
+          </dt>
+          <dd>{shortcut.label}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</div>

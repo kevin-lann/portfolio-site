@@ -7,6 +7,7 @@ const portfolio = defineCollection({
     title: z.string(),
     section: z.enum(['experience', 'projects', 'other']),
     overview: z.string(),
+    banner: z.string(),
     order: z.number(),
     links: z.array(
       z.object({

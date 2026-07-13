@@ -2,6 +2,7 @@
 title: Full Stack Developer, FPT Software (2024)
 section: experience
 overview: Delivered an end-to-end visa-management platform from start to finish within 5 months.
+banner: /imgs/fpt-banner.png
 order: 11
 links:
   - label: Site
@@ -26,8 +27,6 @@ metadata:
       - PostgreSQL
     icon: Shapes
 ---
-![FPT Banner](/imgs/fpt-banner.png)
-
 # Overview
 
 Worked as a full stack developer on a small project team at FPT Software to complete a visa-management platform from start to finish. I built out the clientside frontend from scratch and developed core features using React, Java Springboot, NodeJS, and PostgreSQL.

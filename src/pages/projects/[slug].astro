@@ -1,8 +1,9 @@
 ---
 import { render } from 'astro:content';
 
-import PortfolioLayout from '../../layouts/PortfolioLayout.astro';
-import { getEntriesBySection, getPortfolioEntries, toEntrySlug } from '../../lib/portfolio';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import EntryArticle from '../../components/portfolio/EntryArticle.astro';
+import { getPortfolioEntries, toEntrySlug } from '../../lib/portfolio';
 
 export async function getStaticPaths() {
   const entries = await getPortfolioEntries();
@@ -16,17 +17,11 @@ export async function getStaticPaths() {
 }
 
 const { entry } = Astro.props;
-const entriesBySection = await getEntriesBySection();
 const { Content } = await render(entry);
 ---
 
-<PortfolioLayout
-  pageTitle={entry.data.title + ' | Kevin Lan'}
-  entriesBySection={entriesBySection}
-  activeSection={entry.data.section}
-  activeSlug={toEntrySlug(entry)}
-  metadataEntry={entry}
-  contentLinks={entry.data.links}
->
-  <Content />
-</PortfolioLayout>
+<BaseLayout pageTitle={entry.data.title + ' | Kevin Lan'}>
+  <EntryArticle entry={entry}>
+    <Content />
+  </EntryArticle>
+</BaseLayout>
