@@ -291,6 +291,27 @@ body {
   outline: 0;
 }
 
+/* ---------- Site footer ---------- */
+
+.site-footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.footer-name {
+  margin: 0;
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--light);
+}
+
+.footer-meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
 /* ---------- Home hero (ASCII video) ---------- */
 
 .home-hero {

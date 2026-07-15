@@ -1,0 +1,32 @@
+---
+import { execSync } from 'node:child_process';
+
+const buildDate = new Date();
+
+const lastUpdated = (() => {
+  try {
+    const commitDate = execSync('git log -1 --format=%cI', {
+      cwd: new URL('../../../', import.meta.url),
+      encoding: 'utf8'
+    }).trim();
+
+    return commitDate ? new Date(commitDate) : buildDate;
+  } catch {
+    return buildDate;
+  }
+})();
+
+const lastUpdatedLabel = new Intl.DateTimeFormat('en-US', {
+  month: 'long',
+  day: 'numeric',
+  year: 'numeric'
+}).format(lastUpdated);
+---
+
+<footer class="site-footer py-20">
+  <a href="/" class="logo-button" aria-label="Kevin Lan — footer">
+    <h1 class="footer-name fancy-font">Kevin Lan</h1>
+  </a>
+
+  <p class="footer-meta">Updated {lastUpdatedLabel}</p>
+</footer>
