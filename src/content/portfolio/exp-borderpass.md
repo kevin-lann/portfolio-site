@@ -33,10 +33,11 @@ metadata:
 
 # My key contributions
 
-- Delivered an end-to-end **AI Job Search Tool** that produces LLM-synthesized filters based on user resumes, performs a web crawl of popular job sites, and returns a personalized list of job postings in seconds.
-- Harnessed cutting-edge **AI vision models** like **Google Gemini** to intelligently extract and validate data from user documents, assembling a real-time profile of each applicant.
-- Developed headless **Puppeteer** automations for performing browser-based tasks such as form submissions, resulting in **hundreds** of hours saved for the operations team weekly.
-- Designed, built, and maintained several core **AWS Lambda functions** for document processing and synthesis.
+- Architected an end-to-end **AI Job Search Tool** which generates filters based on vector indexed user resumes to perform a web crawl of popular job sites, returning a personalized list of job postings in seconds.
+- Harnessed cutting-edge **AI vision models** like **Google Gemini** to intelligently extract and validate data from user documents, assembling a real-time profile of each applicant and capturing in PostgreSQL / Redshift.
+- Developed and deployed headless **browser agents** on ECS for automating complex web tasks, resulting in hundreds of hours saved for the operations team weekly and boosting monthly application volume by 2.8x.
+- Orchestrated and maintained critical cloud resources such as **AWS Lambda functions** and **AWS Fargate** background workers powering the core platform including PDF/ZIP merging/compression, image preprocessing, web scraping, and legal document generation significantly boosting system reliability and workflow efficiency.
+
 
 # Personalized AI Job Search Tool
 
@@ -113,19 +114,11 @@ Users can also save favorite results and view search history.
 
 # Workflow Automation
 
-An ongoing project I contributed to was a **headless browser automation tool** built with **Python**, **Puppeteer**, and **Google Gemini**. It mixes traditional browser-based automation with improvisational capabilities of LLMs to perform repetitive online form submissions and reduce manual labor.
+An ongoing project I contributed to was a **headless browser automation tool** built with **Python**, **Puppeteer**, and **Google Gemini** deployed on ECS. It mixes traditional browser-based automation with improvisational capabilities of LLMs to perform repetitive online form submissions and reduce manual labor.
 
 ![Automation](/imgs/automation-2.png)
 
-The main challenge was balancing several moving pieces. The automation must follow a strict sequence of steps that are logged and reported by the server and integrations such as Slack. It can read and parse emails, upload and download files, and perform complex form submissions in a headless browser.
-
-## Deployment
-
-The automation is deployed on an EC2 instance with a configurable cron schedule to perform daily runs.
-
-## Improvements
-
-I helped improve reliability by resolving bot detection issues, improving memory usage, and managing async workflows to ensure tasks like email verification code retrieval finish before proceeding.
+The main challenge was balancing several moving pieces. The automation must follow a strict sequence of steps that are logged and reported by the server and integrations such as Slack. It can read and parse emails, upload and download files, and perform complex form submissions in a headless browser. Bot detection, race conditions (reading from multiple sources such as emails), and exponential backoff were other aspects involved.
 
 ## Integration with Internal Systems
 
@@ -133,4 +126,14 @@ A core architectural problem with the automation was that it was split from the 
 
 ![Automation](/imgs/automation-3.png)
 
-A major refactor I did was introducing a **REST API** interface allowing the automation to communicate with the main API server, which offloaded business logic decisions to the existing backend. This significantly improved maintainability and reduced the risk of business-logic drift.
+A major refactor I did was introducing a **REST API** interface allowing the automation to communicate with the main API server within our VPC, which offloaded business logic decisions to the existing backend. This significantly improved maintainability since it prevented code duplication across two codebases (in different languages too) and reduced the risk of business-logic drift.
+
+## Deployment
+
+The automation is containerized and configured to run on ECS workers using AWS Fargate. Runs are ephermeral and are scheduled on AWS Event Bridge.
+
+## Improvements
+
+I made several reliability enhancements such as resolving bot detection issues, improving memory usage, adding retry logic, exponential backoff, and handling concurrency/race condition related issues.
+
+
