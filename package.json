@@ -27,6 +27,10 @@
     "remark-breaks": "^4.0.0",
     "remark-gfm": "^4.0.1",
     "tailwindcss": "^4.2.2",
+    "three": "^0.185.1",
     "video2ascii": "^1.1.1"
+  },
+  "devDependencies": {
+    "@types/three": "^0.185.1"
   }
 }

@@ -3,7 +3,7 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/portfolio/SiteHeader.astro';
 import SiteFooter from '../components/portfolio/SiteFooter.astro';
 import EntryGrid from '../components/portfolio/EntryGrid.astro';
-import { HomeHero } from '../components/portfolio/HomeHero';
+import { AsciiModelHero } from '../components/portfolio/AsciiModelHero';
 import { getEntriesBySection, sectionLabels } from '../lib/portfolio';
 
 const entriesBySection = await getEntriesBySection();
@@ -13,7 +13,7 @@ const entriesBySection = await getEntriesBySection();
   <SiteHeader />
 
   <div class="home-hero">
-    <HomeHero client:load colorMode="dark" />
+    <AsciiModelHero client:load />
   </div>
 
   <EntryGrid label={sectionLabels.experience} entries={entriesBySection.experience} />
