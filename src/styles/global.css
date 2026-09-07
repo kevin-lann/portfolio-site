@@ -845,14 +845,18 @@ body {
   color: var(--light);
 }
 
-.content-markdown img {
+.content-markdown img,
+.content-markdown video {
   width: 100%;
   display: block;
   margin: 1.25rem 0;
-  cursor: zoom-in;
   border: 1px solid var(--line);
   border-radius: 0.6rem;
   background: #111;
+}
+
+.content-markdown img {
+  cursor: zoom-in;
 }
 
 .image-lightbox {
