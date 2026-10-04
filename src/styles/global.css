@@ -561,6 +561,29 @@ body {
   outline: 0;
 }
 
+/* ---------- Reading time pill ---------- */
+
+.reading-time-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  width: fit-content;
+  margin: 0;
+  padding: 0.3rem 0.75rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel-2);
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.4;
+}
+
+.reading-time-icon {
+  width: 0.9rem;
+  height: 0.9rem;
+  flex-shrink: 0;
+}
+
 /* ---------- Keybinds tooltip ---------- */
 
 .keybinds {

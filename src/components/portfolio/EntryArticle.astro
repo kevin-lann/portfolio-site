@@ -1,6 +1,7 @@
 ---
 import { MetadataGrid } from './MetadataGrid';
 import type { PortfolioEntry } from '../../lib/portfolio';
+import { getReadingTimeLabel } from '../../lib/reading-time';
 
 interface Props {
   entry: PortfolioEntry;
@@ -8,6 +9,7 @@ interface Props {
 
 const { entry } = Astro.props;
 const { title, banner, metadata, links } = entry.data;
+const readingTimeLabel = getReadingTimeLabel(entry.body);
 ---
 
 <a href="/" class="back-link" data-nav-target="home">
@@ -18,6 +20,14 @@ const { title, banner, metadata, links } = entry.data;
   <header class="entry-hero">
     <img src={banner} alt="" class="entry-banner" />
     <h1 class="entry-title fancy-font py-4">{title}</h1>
+
+    <p class="reading-time-pill">
+      <svg viewBox="0 0 24 24" class="reading-time-icon" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <polyline points="12 6 12 12 16 14"></polyline>
+      </svg>
+      <span>{readingTimeLabel}</span>
+    </p>
 
     {links.length > 0 ? (
       <div class="entry-links">
