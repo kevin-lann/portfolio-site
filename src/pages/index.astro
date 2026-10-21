@@ -2,11 +2,19 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/portfolio/SiteHeader.astro';
 import SiteFooter from '../components/portfolio/SiteFooter.astro';
-import EntryGrid from '../components/portfolio/EntryGrid.astro';
 import { HomeHero } from '../components/portfolio/HomeHero';
-import { getEntriesBySection, sectionLabels } from '../lib/portfolio';
+import { EntryDeck } from '../components/portfolio/EntryDeck';
+import { getEntriesBySection, sectionLabels, toEntryHref, type PortfolioEntry } from '../lib/portfolio';
 
 const entriesBySection = await getEntriesBySection();
+
+const toDeckEntries = (entries: PortfolioEntry[]) =>
+  entries.map((entry) => ({
+    href: toEntryHref(entry),
+    title: entry.data.title,
+    overview: entry.data.overview,
+    banner: entry.data.banner
+  }));
 ---
 
 <BaseLayout pageTitle="Kevin Lan | Portfolio">
@@ -16,7 +24,7 @@ const entriesBySection = await getEntriesBySection();
     <HomeHero client:load colorMode="dark" />
   </div>
 
-  <EntryGrid label={sectionLabels.experience} entries={entriesBySection.experience} />
-  <EntryGrid label={sectionLabels.projects} entries={entriesBySection.projects} />
+  <EntryDeck client:load label={sectionLabels.experience} scale={1.3} entries={toDeckEntries(entriesBySection.experience)} />
+  <EntryDeck client:load label={sectionLabels.projects} scale={1.3} entries={toDeckEntries(entriesBySection.projects)} />
   <SiteFooter />
 </BaseLayout>

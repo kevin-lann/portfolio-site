@@ -73,7 +73,7 @@ Charting doesn't just stop at price charts. I built in over 10 chart types enabl
 
 ![Horus price chart](/imgs/horus-charts.png)
 
-My favourite chart, and the most useful in my opinion, is the forward returns chart. It looks back in history and calculates average forward returns after a specific signal or event type. Custom events can be passed in via an array in the `chart_forward_returns` tool, which when paired with agent web search, is useful in identifying custom events such as major IPOs in the market and charting the forward returns after such IPOs.
+My favourite chart, and the most useful in my opinion, is the forward returns chart. It looks back in history and calculates average forward returns after a specific signal or event type. Custom events can be passed in via an array in the `chart_forward_returns` tool, which when paired with agent web search, is useful in identifying custom events. For example I can look at major IPOs in the market and charting the forward returns after these IPOs.
 
 ![Horus fwd chart](/imgs/horus-fwd.png)
 

@@ -335,6 +335,16 @@ body {
 
 /* ---------- Section + card grid ---------- */
 
+.entry-deck {
+  margin-top: 2.75rem;
+}
+
+.entry-deck-stage {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .entry-section {
   margin-top: 3.25rem;
 }
