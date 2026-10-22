@@ -1,0 +1,5 @@
+# GitHub labels a repo by whichever language has the most counted bytes.
+# This site is Astro; the .ts/.tsx files are islands and helpers. Keep them
+# in the repo, but leave them out of the language bar so Astro is the label.
+*.ts linguist-detectable=false
+*.tsx linguist-detectable=false
