@@ -416,7 +416,9 @@ html[data-reading-mode="agent"] #agent-view {
 .site-footer {
   display: flex;
   flex-direction: row;
+  align-items: baseline;
   justify-content: space-between;
+  gap: 1rem;
 }
 
 .footer-name {
@@ -424,12 +426,26 @@ html[data-reading-mode="agent"] #agent-view {
   font-size: 1.5rem;
   line-height: 1;
   color: var(--light);
+  white-space: nowrap;
 }
 
 .footer-meta {
   margin: 0;
   color: var(--muted);
   font-size: 0.95rem;
+  text-align: right;
+}
+
+.footer-meta a {
+  color: inherit;
+  text-decoration-line: underline;
+  text-decoration-color: color-mix(in oklab, var(--muted) 45%, transparent);
+  text-underline-offset: 0.18em;
+}
+
+.footer-meta a:hover,
+.footer-meta a:focus-visible {
+  color: var(--light);
 }
 
 /* ---------- Home hero (ASCII video) ---------- */

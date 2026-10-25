@@ -13,11 +13,28 @@ interface Props {
 
 const { pageTitle, description = 'Software engineer based in Toronto delivering backend-heavy applications. University of Toronto 4th year CS student.' } = Astro.props;
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
-const agentIndexUrl = new URL('/llms.txt', Astro.site);
+const writeupMatch = Astro.url.pathname.match(/^\/(experience|projects|other)\/([^/]+)\/?$/);
+const markdownAlternate = writeupMatch
+  ? new URL(`/${writeupMatch[1]}/${writeupMatch[2]}.md`, Astro.site)
+  : new URL('/llms.txt', Astro.site);
+const shareImage = new URL('/og.png', Astro.site);
+const ogType = writeupMatch ? 'article' : 'website';
 
-// A hidden, ordered list of every entry so arrow-key navigation works on
-// every page (home + article pages) without any visible sidebar.
+// A visually hidden, ordered list of every entry so arrow-key navigation works
+// on every page, and so non-JavaScript crawlers can read the index.
 const orderedEntries = await getPortfolioEntries();
+const navGroups = (
+  [
+    { label: 'Experience', section: 'experience' },
+    { label: 'Projects', section: 'projects' },
+    { label: 'Other', section: 'other' }
+  ] as const
+)
+  .map((group) => ({
+    ...group,
+    entries: orderedEntries.filter((entry) => entry.data.section === group.section)
+  }))
+  .filter((group) => group.entries.length > 0);
 ---
 
 <html lang="en">
@@ -30,7 +47,21 @@ const orderedEntries = await getPortfolioEntries();
     <title>{pageTitle}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonicalUrl.href} />
-    <link rel="alternate" type="text/markdown" href={agentIndexUrl.href} title="Agent-readable index" />
+    <link rel="alternate" type="text/markdown" href={markdownAlternate.href} title={writeupMatch ? 'Markdown version' : 'Agent-readable index'} />
+    <meta property="og:site_name" content="Kevin Lan" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalUrl.href} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:image" content={shareImage.href} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content="Kevin Lan, software engineer based in Toronto." />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={pageTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={shareImage.href} />
+    <meta name="twitter:image:alt" content="Kevin Lan, software engineer based in Toronto." />
     <ClientRouter />
     <script is:inline>
       try {
@@ -48,12 +79,21 @@ const orderedEntries = await getPortfolioEntries();
         <slot />
       </div>
 
-      <nav class="sr-only" aria-hidden="true" data-entry-nav>
-        <a href="/" data-nav-target="home">home</a>
-        {orderedEntries.map((entry) => (
-          <a href={toEntryHref(entry)} data-entry-section={entry.data.section}>
-            {entry.data.title}
-          </a>
+      <nav class="sr-only" data-entry-nav aria-label="Portfolio">
+        <a href="/" data-nav-target="home">Home</a>
+        {navGroups.map((group) => (
+          <div>
+            <p>{group.label}</p>
+            <ul>
+              {group.entries.map((entry) => (
+                <li>
+                  <a href={toEntryHref(entry)} data-entry-section={entry.data.section}>
+                    {entry.data.title}: {entry.data.overview}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))}
       </nav>
 

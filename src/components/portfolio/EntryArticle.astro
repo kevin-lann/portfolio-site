@@ -8,8 +8,24 @@ interface Props {
 }
 
 const { entry } = Astro.props;
-const { title, banner, metadata, links } = entry.data;
+const { title, banner, metadata, links, overview } = entry.data;
 const readingTimeLabel = getReadingTimeLabel(entry.body);
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const bannerImage = new URL(banner, Astro.site);
+const articleJsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description: overview,
+  url: canonicalUrl.href,
+  mainEntityOfPage: canonicalUrl.href,
+  image: bannerImage.href,
+  author: {
+    '@type': 'Person',
+    name: 'Kevin Lan',
+    url: new URL('/', Astro.site).href
+  }
+}).replace(/</g, '\\u003c');
 ---
 
 <a href="/" class="back-link" data-nav-target="home">
@@ -53,3 +69,5 @@ const readingTimeLabel = getReadingTimeLabel(entry.body);
     <slot />
   </div>
 </article>
+
+<script type="application/ld+json" is:inline set:html={articleJsonLd} />
