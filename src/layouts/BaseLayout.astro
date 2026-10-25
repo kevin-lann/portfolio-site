@@ -8,9 +8,12 @@ import { getPortfolioEntries, toEntryHref } from '../lib/portfolio';
 
 interface Props {
   pageTitle: string;
+  description?: string;
 }
 
-const { pageTitle } = Astro.props;
+const { pageTitle, description = 'Software engineer based in Toronto delivering backend-heavy applications. University of Toronto 4th year CS student.' } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site);
+const agentIndexUrl = new URL('/llms.txt', Astro.site);
 
 // A hidden, ordered list of every entry so arrow-key navigation works on
 // every page (home + article pages) without any visible sidebar.
@@ -25,7 +28,19 @@ const orderedEntries = await getPortfolioEntries();
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{pageTitle}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalUrl.href} />
+    <link rel="alternate" type="text/markdown" href={agentIndexUrl.href} title="Agent-readable index" />
     <ClientRouter />
+    <script is:inline>
+      try {
+        if (window.localStorage.getItem('portfolio-reading-mode') === 'agent') {
+          document.documentElement.setAttribute('data-reading-mode', 'agent');
+        }
+      } catch {
+        // Storage can be unavailable. Human mode stays the default.
+      }
+    </script>
   </head>
   <body>
     <main class="portfolio-root" data-color-mode="dark">
@@ -52,6 +67,7 @@ const orderedEntries = await getPortfolioEntries();
 
         const COLOR_MODE_STORAGE_KEY = 'portfolio-color-mode';
         const AMBIENCE_STORAGE_KEY = 'portfolio-ambience-enabled';
+        const READING_MODE_STORAGE_KEY = 'portfolio-reading-mode';
 
         const pageController = new AbortController();
         window.__portfolioPageCleanup = () => pageController.abort();
@@ -71,10 +87,70 @@ const orderedEntries = await getPortfolioEntries();
         const storedMode = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY) || 'dark';
         let colorMode = validColorModes.has(storedMode) ? storedMode : 'dark';
 
+        const readReadingMode = () => {
+          try {
+            return window.localStorage.getItem(READING_MODE_STORAGE_KEY) === 'agent' ? 'agent' : 'human';
+          } catch {
+            return 'human';
+          }
+        };
+
+        const applyReadingMode = (mode) => {
+          const nextMode = mode === 'agent' ? 'agent' : 'human';
+          root.setAttribute('data-reading-mode', nextMode);
+          try {
+            window.localStorage.setItem(READING_MODE_STORAGE_KEY, nextMode);
+          } catch {
+            // Storage can be unavailable. The current page still switches.
+          }
+
+          document.querySelectorAll('[data-reading-tab]').forEach((tab) => {
+            const selected = tab.getAttribute('data-reading-tab') === nextMode;
+            tab.setAttribute('aria-selected', selected ? 'true' : 'false');
+            tab.tabIndex = selected ? 0 : -1;
+          });
+
+          const humanView = document.getElementById('human-view');
+          const agentView = document.getElementById('agent-view');
+          if (humanView) humanView.hidden = nextMode === 'agent';
+          if (agentView) agentView.hidden = nextMode !== 'agent';
+        };
+
         document.addEventListener('astro:before-swap', (event) => {
           const nextMode = window.localStorage.getItem(COLOR_MODE_STORAGE_KEY) || colorMode;
-          if (!validColorModes.has(nextMode)) return;
-          event.newDocument.documentElement.setAttribute('data-color-mode', nextMode);
+          if (validColorModes.has(nextMode)) {
+            event.newDocument.documentElement.setAttribute('data-color-mode', nextMode);
+          }
+          if (readReadingMode() === 'agent') {
+            event.newDocument.documentElement.setAttribute('data-reading-mode', 'agent');
+          }
+        }, withSignal());
+
+        applyReadingMode(readReadingMode());
+
+        document.addEventListener('click', (event) => {
+          const target = event.target;
+          if (!(target instanceof Element)) return;
+
+          const tab = target.closest('[data-reading-tab]');
+          if (tab instanceof HTMLElement) {
+            applyReadingMode(tab.getAttribute('data-reading-tab'));
+            return;
+          }
+
+          const copyButton = target.closest('[data-copy-agent-markdown]');
+          if (!(copyButton instanceof HTMLButtonElement)) return;
+          const code = document.querySelector('#agent-view code');
+          const text = code?.textContent ?? '';
+          if (!text) return;
+
+          void navigator.clipboard.writeText(text).then(() => {
+            const previous = copyButton.textContent;
+            copyButton.textContent = 'Copied';
+            window.setTimeout(() => {
+              if (copyButton.isConnected) copyButton.textContent = previous;
+            }, 1400);
+          }).catch(() => undefined);
         }, withSignal());
 
         window.__portfolioAmbience ??= {
@@ -309,6 +385,19 @@ const orderedEntries = await getPortfolioEntries();
           if (key === 'd') return setColorMode('dark');
           if (key === 's') return setColorMode('summer', { playAmbience: true });
           if (key === 'n') return setColorMode('night', { playAmbience: true });
+
+          if (
+            (key === 'arrowleft' || key === 'arrowright') &&
+            target instanceof HTMLElement &&
+            target.hasAttribute('data-reading-tab')
+          ) {
+            event.preventDefault();
+            const nextReadingMode = key === 'arrowright' ? 'agent' : 'human';
+            applyReadingMode(nextReadingMode);
+            const nextTab = document.querySelector('[data-reading-tab="' + nextReadingMode + '"]');
+            if (nextTab instanceof HTMLElement) nextTab.focus();
+            return;
+          }
 
           if (key === 'arrowdown' || key === 'arrowup') {
             event.preventDefault();

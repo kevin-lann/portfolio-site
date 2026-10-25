@@ -20,7 +20,7 @@ const { entry } = Astro.props;
 const { Content } = await render(entry);
 ---
 
-<BaseLayout pageTitle={entry.data.title + ' | Kevin Lan'}>
+<BaseLayout pageTitle={entry.data.title + ' | Kevin Lan'} description={entry.data.overview}>
   <EntryArticle entry={entry}>
     <Content />
   </EntryArticle>

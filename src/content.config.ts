@@ -36,6 +36,15 @@ const portfolio = defineCollection({
   })
 });
 
+const agent = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/agent' }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string()
+  })
+});
+
 export const collections = {
-  portfolio
+  portfolio,
+  agent
 };

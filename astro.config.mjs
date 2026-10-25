@@ -7,6 +7,7 @@ import { rehypeMarkdownVideo } from './src/lib/rehype-markdown-video.ts';
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://kevinlan.space',
   integrations: [react()],
   markdown: {
     rehypePlugins: [rehypeMarkdownVideo],

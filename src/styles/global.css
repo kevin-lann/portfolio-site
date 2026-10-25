@@ -243,12 +243,132 @@ body {
   font-size: 0.95rem;
 }
 
+.header-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.25rem 1.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
 .social-icons {
   display: flex;
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
-  margin-top: 0.25rem;
+}
+
+.reading-mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.15rem;
+  margin-left: auto;
+  padding: 0.15rem;
+  border: 1px solid var(--line);
+  border-radius: 0.5rem;
+  background: transparent;
+}
+
+.reading-mode-tab {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.78rem;
+  line-height: 1;
+  height: 1.7rem;
+  padding: 0 0.7rem;
+  border-radius: 0.35rem;
+  cursor: pointer;
+}
+
+.reading-mode-tab[aria-selected="true"] {
+  color: var(--light);
+  background: color-mix(in oklab, var(--panel-2) 82%, transparent);
+}
+
+.reading-mode-tab:hover,
+.reading-mode-tab:focus-visible {
+  color: var(--lime);
+  outline: 0;
+}
+
+.reading-mode-tab[aria-selected="true"]:hover,
+.reading-mode-tab[aria-selected="true"]:focus-visible {
+  color: var(--lime);
+}
+
+html[data-reading-mode="agent"] #human-view {
+  display: none !important;
+}
+
+html[data-reading-mode="agent"] #agent-view {
+  display: block !important;
+}
+
+.agent-view {
+  margin-top: 2.75rem;
+}
+
+.agent-codeblock {
+  border: 1px solid var(--line);
+  border-radius: 0.6rem;
+  background: var(--code-bg);
+  overflow: hidden;
+}
+
+.agent-codeblock-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.45rem 0.7rem;
+  border-bottom: 1px solid var(--line);
+  color: var(--muted);
+  font-family: "Fragment Mono", monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.01em;
+}
+
+.agent-codeblock-actions {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.agent-codeblock-link,
+.agent-codeblock-copy {
+  color: var(--muted);
+  font: inherit;
+  font-family: "Fragment Mono", monospace;
+  font-size: 0.72rem;
+  text-decoration: none;
+  background: transparent;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+
+.agent-codeblock-link:hover,
+.agent-codeblock-link:focus-visible,
+.agent-codeblock-copy:hover,
+.agent-codeblock-copy:focus-visible {
+  color: var(--lime);
+  outline: 0;
+}
+
+.agent-markdown {
+  margin: 0;
+  padding: 1rem 1.05rem 1.15rem;
+  overflow-x: auto;
+  color: var(--code-text);
+  font-family: "Fragment Mono", monospace;
+  font-size: 0.78rem;
+  line-height: 1.65;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }
 
 .social-icon-link {

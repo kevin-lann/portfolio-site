@@ -1,4 +1,6 @@
 ---
+import { getEntry } from 'astro:content';
+
 import BaseLayout from '../layouts/BaseLayout.astro';
 import SiteHeader from '../components/portfolio/SiteHeader.astro';
 import SiteFooter from '../components/portfolio/SiteFooter.astro';
@@ -7,6 +9,38 @@ import { EntryDeck } from '../components/portfolio/EntryDeck';
 import { getEntriesBySection, sectionLabels, toEntryHref, type PortfolioEntry } from '../lib/portfolio';
 
 const entriesBySection = await getEntriesBySection();
+const agentProfile = await getEntry('agent', 'profile');
+
+if (!agentProfile?.body) {
+  throw new Error('Missing agent profile markdown.');
+}
+
+const agentMarkdown = agentProfile.body.trim();
+const personJsonLd = JSON.stringify({
+  '@context': 'https://schema.org',
+  '@type': 'ProfilePage',
+  url: 'https://kevinlan.space/',
+  mainEntity: {
+    '@type': 'Person',
+    name: 'Kevin Lan',
+    url: 'https://kevinlan.space/',
+    email: 'kevinlan416@gmail.com',
+    description: agentProfile.data.description,
+    homeLocation: {
+      '@type': 'Place',
+      name: 'Toronto'
+    },
+    affiliation: {
+      '@type': 'CollegeOrUniversity',
+      name: 'University of Toronto'
+    },
+    sameAs: [
+      'https://www.linkedin.com/in/kevin-lan-/',
+      'https://github.com/kevin-lann',
+      'https://x.com/kevinlann_'
+    ]
+  }
+});
 
 const toDeckEntries = (entries: PortfolioEntry[]) =>
   entries.map((entry) => ({
@@ -17,14 +51,31 @@ const toDeckEntries = (entries: PortfolioEntry[]) =>
   }));
 ---
 
-<BaseLayout pageTitle="Kevin Lan | Portfolio">
+<BaseLayout pageTitle="Kevin Lan | Portfolio" description={agentProfile.data.description}>
   <SiteHeader />
 
-  <div class="home-hero">
-    <HomeHero client:load colorMode="dark" />
+  <div id="human-view">
+    <div class="home-hero">
+      <HomeHero client:load colorMode="dark" />
+    </div>
+
+    <EntryDeck client:load label={sectionLabels.experience} scale={1.3} entries={toDeckEntries(entriesBySection.experience)} />
+    <EntryDeck client:load label={sectionLabels.projects} scale={1.3} entries={toDeckEntries(entriesBySection.projects)} />
+    <SiteFooter />
   </div>
 
-  <EntryDeck client:load label={sectionLabels.experience} scale={1.3} entries={toDeckEntries(entriesBySection.experience)} />
-  <EntryDeck client:load label={sectionLabels.projects} scale={1.3} entries={toDeckEntries(entriesBySection.projects)} />
-  <SiteFooter />
+  <section id="agent-view" class="agent-view" role="tabpanel" aria-labelledby="reading-mode-agent" hidden>
+    <div class="agent-codeblock">
+      <div class="agent-codeblock-bar">
+        <span class="agent-codeblock-name">profile.md</span>
+        <div class="agent-codeblock-actions">
+          <a href="/llms.txt" class="agent-codeblock-link">llms.txt</a>
+          <button type="button" class="agent-codeblock-copy" data-copy-agent-markdown>Copy</button>
+        </div>
+      </div>
+      <pre class="agent-markdown"><code>{agentMarkdown}</code></pre>
+    </div>
+  </section>
+
+  <script type="application/ld+json" is:inline set:html={personJsonLd} />
 </BaseLayout>
